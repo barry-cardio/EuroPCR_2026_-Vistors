@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EuroPCR 2026 · Visitor Log</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   INSIGHT LIFETECH · DARK GOLD DESIGN SYSTEM
+   Based on PFA Expert Board aesthetic
+═══════════════════════════════════════════ */
+:root {
+  --bg:        #0A0A0A;
+  --bg2:       #111111;
+  --bg3:       #181818;
+  --bg4:       #1E1E1E;
+  --nav:       #0D0D0D;
+  --border:    #2A2A2A;
+  --border2:   #333333;
+  --gold:      #C9A227;
+  --gold2:     #E8BE40;
+  --gold-dim:  rgba(201,162,39,0.15);
+  --gold-dim2: rgba(201,162,39,0.08);
+  --text:      #F0EDE8;
+  --text2:     #A89880;
+  --text3:     #6B5F50;
+  --high:      #D4533A;
+  --high-dim:  rgba(212,83,58,0.15);
+  --med:       #C9A227;
+  --med-dim:   rgba(201,162,39,0.15);
+  --low:       #4A7FA8;
+  --low-dim:   rgba(74,127,168,0.15);
+  --green:     #4A8A5A;
+  --green-dim: rgba(74,138,90,0.15);
+}
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── NAVIGATION BAR ── */
+.navbar {
+  height: 52px;
+  background: var(--nav);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px;
+  position: sticky; top:0; z-index:200;
+  gap: 16px;
+}
+.nav-badge {
+  width: 32px; height: 32px;
+  background: var(--gold);
+  display: flex; align-items:center; justify-content:center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 600; font-size: 12px;
+  color: #000; flex-shrink:0;
+}
+.nav-title {
+  font-size: 15px; font-weight: 600;
+  color: var(--text); letter-spacing: 0.2px;
+}
+.nav-spacer { flex:1; }
+.nav-total {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--text2);
+}
+.nav-total span { color: var(--gold); font-weight: 600; }
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; gap: 28px; overflow-x:auto;
+  scrollbar-width:none;
+}
+.stats-strip::-webkit-scrollbar { display:none; }
+.stat-item { flex-shrink:0; }
+.stat-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px; font-weight: 600;
+  color: var(--gold); line-height:1;
+}
+.stat-lbl {
+  font-size: 11px; color: var(--text3);
+  margin-top: 3px; letter-spacing: 0.3px;
+}
+
+/* ── TAB BAR ── */
+.tabbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+}
+.tab {
+  flex:1; padding: 13px 8px;
+  text-align:center;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.8px; text-transform:uppercase;
+  color: var(--text3); cursor:pointer;
+  border-bottom: 2px solid transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.15s;
+}
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── VIEWS ── */
+.view { display:none; }
+.view.active { display:block; }
+
+/* ── FORM SECTION ── */
+.form-wrap { padding: 16px; padding-bottom:80px; }
+
+.fsec {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  margin-bottom: 12px;
+  padding: 16px;
+}
+.fsec-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 2px; text-transform:uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.flabel {
+  font-size: 11px; color: var(--text3);
+  letter-spacing: 0.5px; text-transform:uppercase;
+  margin-bottom: 8px; font-weight:500;
+}
+.frow { margin-bottom: 14px; }
+.frow:last-child { margin-bottom:0; }
+
+/* ── SELECT / INPUT ── */
+select, input[type="text"], textarea {
+  width:100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px; padding: 13px 14px;
+  outline:none;
+  transition: border-color 0.15s;
+  -webkit-appearance:none; appearance:none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23C9A227'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+select option { background: #111; }
+select:focus, input[type="text"]:focus, textarea:focus {
+  border-color: var(--gold);
+}
+textarea { resize:none; height:90px; line-height:1.5; }
+
+/* ── CHIP GRID ── */
+.chip-grid { display:flex; flex-wrap:wrap; gap:8px; }
+.chip {
+  padding: 9px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-size: 13px; font-weight: 500;
+  cursor:pointer;
+  transition: all 0.15s;
+  user-select:none;
+  font-family: 'IBM Plex Sans', sans-serif;
+  letter-spacing: 0.2px;
+}
+.chip:active { opacity:0.7; }
+.chip.sel {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+/* Date chips */
+.chip.date-chip { min-width: 72px; text-align:center; }
+/* Intent chips */
+.chip.intent-h.sel { background:var(--high-dim); border-color:var(--high); color:var(--high); }
+.chip.intent-m.sel { background:var(--med-dim);  border-color:var(--med);  color:var(--med);  }
+.chip.intent-l.sel { background:var(--low-dim);  border-color:var(--low);  color:var(--low);  }
+
+/* ── COUNTRY SEARCH ── */
+.csearch-wrap { position:relative; }
+.csearch-wrap input { padding-right:40px; }
+.cdropdown {
+  position:absolute; top:calc(100% + 2px); left:0; right:0; z-index:300;
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  max-height:200px; overflow-y:auto;
+  display:none;
+}
+.cdropdown.open { display:block; }
+.coption {
+  padding: 12px 14px; cursor:pointer;
+  font-size: 14px; color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.coption:last-child { border-bottom:none; }
+.coption:hover, .coption.hl { background: var(--gold-dim); color: var(--gold); }
+.cselected {
+  display:inline-flex; align-items:center; gap:8px;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  color: var(--gold); font-size:13px;
+  padding: 6px 12px; margin-top:8px;
+  font-weight:500;
+}
+.cselected-x { cursor:pointer; font-size:16px; line-height:1; opacity:0.7; }
+
+/* ── SAVE BUTTON ── */
+.save-btn {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background: var(--gold);
+  border:none; color:#000;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: 1px; text-transform:uppercase;
+  padding: 18px; cursor:pointer;
+  transition: background 0.15s;
+}
+.save-btn:active { background: var(--gold2); }
+
+/* ── RECORDS VIEW ── */
+.rec-wrap { padding: 16px; padding-bottom:40px; }
+.rec-filters {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:8px; margin-bottom:16px;
+}
+.rec-filters select { font-size:13px; padding:10px 12px; }
+.rec-count {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px; color:var(--text3);
+  margin-bottom:12px; letter-spacing:0.5px;
+}
+.rec-count span { color:var(--gold); }
+
+/* ── RECORD CARD ── */
+.rcard {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border2);
+  margin-bottom: 10px; padding: 14px;
+}
+.rcard.high { border-left-color: var(--high); }
+.rcard.medium { border-left-color: var(--gold); }
+.rcard.low { border-left-color: var(--low); }
+
+.rcard-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.rcard-name { font-size:15px; font-weight:600; line-height:1.2; }
+.rcard-inst { font-size:12px; color:var(--text2); margin-top:3px; }
+.rcard-intent {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; font-weight:600; letter-spacing:1px;
+  padding:4px 8px; flex-shrink:0; margin-left:8px;
+}
+.rcard-intent.high { background:var(--high-dim); color:var(--high); }
+.rcard-intent.medium { background:var(--med-dim); color:var(--med); }
+.rcard-intent.low { background:var(--low-dim); color:var(--low); }
+
+.rcard-chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+.rc {
+  font-size:11px; font-weight:500; padding:3px 8px;
+  border:1px solid var(--border2); color:var(--text3);
+  font-family:'IBM Plex Mono',monospace;
+}
+.rc.gold { border-color:rgba(201,162,39,0.4); color:var(--gold); background:var(--gold-dim2); }
+.rc.blue { border-color:rgba(74,127,168,0.4); color:var(--low); background:rgba(74,127,168,0.08); }
+
+.rcard-note {
+  font-size:12px; color:var(--text2);
+  margin-top:8px; padding-top:8px;
+  border-top:1px solid var(--border);
+  line-height:1.5; font-style:italic;
+}
+.rcard-meta {
+  display:flex; justify-content:space-between;
+  margin-top:8px; padding-top:8px;
+  border-top:1px solid var(--border);
+}
+.rcard-meta-i {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; color:var(--text3); letter-spacing:0.3px;
+}
+.rcard-actions { display:flex; gap:8px; margin-top:10px; }
+.btn-sm {
+  padding:7px 14px; font-size:11px;
+  font-family:'IBM Plex Mono',monospace; font-weight:600;
+  letter-spacing:0.5px; cursor:pointer; border:1px solid;
+  transition:all 0.15s;
+}
+.btn-edit { border-color:rgba(201,162,39,0.4); color:var(--gold); background:var(--gold-dim2); }
+.btn-del  { border-color:rgba(212,83,58,0.4); color:var(--high); background:var(--high-dim); }
+
+.empty {
+  text-align:center; padding:60px 20px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px; color:var(--text3);
+  letter-spacing:0.5px;
+}
+
+/* ── STATS VIEW ── */
+.stats-wrap { padding:16px; padding-bottom:40px; }
+.stats-4 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.scard {
+  background:var(--bg2); border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  padding:14px;
+}
+.scard-num {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:28px; font-weight:600; color:var(--gold);
+}
+.scard-num.red { color:var(--high); }
+.scard-num.blue { color:var(--low); }
+.scard-lbl { font-size:11px; color:var(--text3); margin-top:4px; letter-spacing:0.3px; }
+
+.schart-sec {
+  background:var(--bg2); border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  padding:16px; margin-bottom:12px;
+}
+.schart-title {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:14px;
+}
+.bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.bar-lbl { width:110px; font-size:11px; color:var(--text2); text-align:right; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bar-track { flex:1; background:var(--bg3); height:8px; }
+.bar-fill { height:100%; background:var(--gold); transition:width 0.5s ease; }
+.bar-n { width:24px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); }
+
+.export-btn {
+  width:100%; padding:15px;
+  background:var(--bg2);
+  border:1px solid var(--gold);
+  color:var(--gold);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px; font-weight:600;
+  letter-spacing:1.5px; text-transform:uppercase;
+  cursor:pointer; margin-top:16px;
+  transition:all 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.export-btn:active { background:var(--gold-dim); }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:80px; left:50%;
+  transform:translateX(-50%) translateY(30px);
+  background:var(--bg3); border:1px solid var(--gold);
+  color:var(--gold);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px; font-weight:600; letter-spacing:1px;
+  padding:12px 24px; z-index:999;
+  opacity:0; transition:all 0.25s;
+  white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── CARD SCANNER ── */
+.scan-btn {
+  width:100%; padding:14px;
+  background:var(--bg3); border:1px solid var(--border2);
+  color:var(--text2); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:all 0.15s;
+}
+.scan-btn:active { border-color:var(--gold); color:var(--gold); background:var(--gold-dim2); }
+.scan-icon { font-size:20px; }
+.scan-txt { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; letter-spacing:1.5px; }
+.scan-hint { font-size:11px; color:var(--text3); margin-top:6px; letter-spacing:0.3px; }
+
+/* ── CAMERA MODAL ── */
+
+/* Processing */
+.cam-processing-wrap { text-align:center; padding:30px 0; }
+.cam-spinner {
+  width:40px; height:40px; margin:0 auto 16px;
+  border:3px solid var(--border2); border-top-color:var(--gold);
+  border-radius:50%; animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.cam-proc-txt { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text2); letter-spacing:1px; }
+
+/* Result */
+.cam-result-title {
+  font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600;
+  letter-spacing:2px; color:var(--gold); margin-bottom:12px;
+}
+.cam-field-row { margin-bottom:10px; }
+.cam-apply-btn {
+  flex:1; padding:13px;
+  background:var(--gold); border:none; color:#000;
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  letter-spacing:1px; cursor:pointer;
+}
+.cam-retry-btn {
+  flex:1; padding:13px;
+  background:var(--bg3); border:1px solid var(--border2); color:var(--text2);
+  font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+  letter-spacing:1px; cursor:pointer;
+}
+.cam-error-txt {
+  background:var(--high-dim); border:1px solid var(--high);
+  color:var(--high); padding:14px;
+  font-size:13px; line-height:1.5; text-align:center;
+}
+
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-badge">IL</div>
+  <div class="nav-title">EuroPCR 2026 · Visitor Log</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-total">TOTAL <span id="nav-total">0</span></div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip" id="stats-strip">
+  <div class="stat-item"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">TOTAL</div></div>
+  <div class="stat-item"><div class="stat-num" id="s-high" style="color:var(--high)">0</div><div class="stat-lbl">HIGH INTENT</div></div>
+  <div class="stat-item"><div class="stat-num" id="s-med">0</div><div class="stat-lbl">MEDIUM</div></div>
+  <div class="stat-item"><div class="stat-num" id="s-low" style="color:var(--low)">0</div><div class="stat-lbl">LOW</div></div>
+  <div class="stat-item"><div class="stat-num" id="s-new">0</div><div class="stat-lbl">NEW CUSTOMER</div></div>
+  <div class="stat-item"><div class="stat-num" id="s-active">0</div><div class="stat-lbl">ACTIVE VISIT</div></div>
+</div>
+
+<!-- TABBAR -->
+<div class="tabbar">
+  <div class="tab active" id="tab-form" onclick="switchTab('form')">+ New</div>
+  <div class="tab" id="tab-records" onclick="switchTab('records')">Records</div>
+  <div class="tab" id="tab-stats" onclick="switchTab('stats')">Stats</div>
+</div>
+
+
+<!-- ═══════ FORM VIEW ═══════ -->
+<div class="view active" id="view-form">
+<div class="form-wrap">
+
+  <!-- Recorder -->
+  <div class="fsec">
+    <div class="fsec-title">Recorded By</div>
+    <div class="frow">
+      <select id="f-recorder">
+        <option value="">— Select team member —</option>
+        <option>BELLONA</option><option>FABO</option><option>ISSAC</option>
+        <option>JAMES</option><option>JASON</option><option>JOYCE</option>
+        <option>LYNETTY</option><option>OTHERS</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Visit Info -->
+  <div class="fsec">
+    <div class="fsec-title">Visit Info</div>
+    <div class="frow">
+      <div class="flabel">Date *</div>
+      <div class="chip-grid">
+        <div class="chip date-chip" data-g="date" data-v="May 19" onclick="selOne(this,'date')">MAY 19</div>
+        <div class="chip date-chip" data-g="date" data-v="May 20" onclick="selOne(this,'date')">MAY 20</div>
+        <div class="chip date-chip" data-g="date" data-v="May 21" onclick="selOne(this,'date')">MAY 21</div>
+        <div class="chip date-chip" data-g="date" data-v="May 22" onclick="selOne(this,'date')">MAY 22</div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">Visit Channel *</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="channel" data-v="Active Visit" onclick="selOne(this,'channel')">Active Visit</div>
+        <div class="chip" data-g="channel" data-v="Passive Visit" onclick="selOne(this,'channel')">Passive Visit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Region & Country -->
+  <div class="fsec">
+    <div class="fsec-title">Region & Country</div>
+    <div class="frow">
+      <div class="flabel">Region *</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="region" data-v="Region 1 (Europe/CIS)" onclick="selOne(this,'region')">Region 1 · Europe / CIS</div>
+        <div class="chip" data-g="region" data-v="Region 2 (ME/APAC/LatAm/Africa)" onclick="selOne(this,'region')">Region 2 · ME / APAC / LatAm / Africa</div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">Country / Territory *</div>
+      <div class="csearch-wrap">
+        <input type="text" id="country-inp" placeholder="Search country…" autocomplete="off"
+          oninput="filterC(this.value)" onfocus="openC()" onblur="setTimeout(closeC,200)">
+        <div class="cdropdown" id="cdrop"></div>
+      </div>
+      <div id="csel"></div>
+    </div>
+  </div>
+
+  <!-- Customer Info -->
+  <div class="fsec">
+    <div class="fsec-title">Customer Info</div>
+
+    <!-- CARD PHOTO -->
+    <div class="frow">
+      <div class="flabel">Business Card Photo</div>
+
+      <!-- Idle: shoot button -->
+      <div id="cam-idle-state">
+        <button class="scan-btn" onclick="startCam()">
+          <span class="scan-icon">📷</span>
+          <span class="scan-txt">OPEN CAMERA</span>
+        </button>
+        <div class="scan-hint">Point camera at business card and capture</div>
+      </div>
+
+      <!-- Live camera viewfinder -->
+      <div id="cam-live-state" style="display:none">
+        <div style="position:relative;background:#000;width:100%;aspect-ratio:4/3;overflow:hidden">
+          <video id="cam-video" autoplay playsinline muted
+            style="width:100%;height:100%;object-fit:cover"></video>
+          <!-- Corner guides -->
+          <div style="position:absolute;inset:12px;pointer-events:none">
+            <div style="position:absolute;top:0;left:0;width:22px;height:22px;border-top:2px solid var(--gold);border-left:2px solid var(--gold)"></div>
+            <div style="position:absolute;top:0;right:0;width:22px;height:22px;border-top:2px solid var(--gold);border-right:2px solid var(--gold)"></div>
+            <div style="position:absolute;bottom:0;left:0;width:22px;height:22px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold)"></div>
+            <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold)"></div>
+          </div>
+          <canvas id="cam-canvas" style="display:none"></canvas>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="scan-btn" style="flex:2;background:var(--gold);color:#000;border-color:var(--gold)"
+            onclick="shootCard()">
+            <span class="scan-icon">⬤</span>
+            <span class="scan-txt" style="color:#000">CAPTURE</span>
+          </button>
+          <button class="scan-btn" style="flex:1" onclick="stopCam()">
+            <span class="scan-txt">CANCEL</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview after capture -->
+      <div id="cam-preview-state" style="display:none">
+        <div style="position:relative">
+          <img id="card-photo-img"
+            style="width:100%;max-height:200px;object-fit:contain;border:1px solid var(--gold)">
+          <div style="position:absolute;top:6px;right:6px;display:flex;gap:6px">
+            <button onclick="retakeCam()"
+              style="background:rgba(0,0,0,0.75);border:1px solid var(--border2);
+              color:var(--text2);padding:5px 10px;font-family:'IBM Plex Mono',monospace;
+              font-size:11px;cursor:pointer;letter-spacing:0.5px">↩ RETAKE</button>
+            <button onclick="clearCardPhoto()"
+              style="background:rgba(0,0,0,0.75);border:1px solid var(--high);
+              color:var(--high);padding:5px 10px;font-family:'IBM Plex Mono',monospace;
+              font-size:11px;cursor:pointer;letter-spacing:0.5px">✕</button>
+          </div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);
+          margin-top:6px;letter-spacing:0.5px">✓ CARD PHOTO SAVED</div>
+      </div>
+
+    </div>
+
+    <div class="frow">
+      <div class="flabel">Full Name *</div>
+      <input type="text" id="f-name" placeholder="First Last">
+    </div>
+    <div class="frow">
+      <div class="flabel">Institution</div>
+      <input type="text" id="f-inst" placeholder="Hospital / Company name">
+    </div>
+    <div class="frow">
+      <div class="flabel">Accompanying Persons</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="accomp" data-v="1" onclick="selOne(this,'accomp')">1</div>
+        <div class="chip" data-g="accomp" data-v="2" onclick="selOne(this,'accomp')">2</div>
+        <div class="chip" data-g="accomp" data-v="3" onclick="selOne(this,'accomp')">3</div>
+        <div class="chip" data-g="accomp" data-v="4" onclick="selOne(this,'accomp')">4</div>
+        <div class="chip" data-g="accomp" data-v="5" onclick="selOne(this,'accomp')">5</div>
+        <div class="chip" data-g="accomp" data-v="6" onclick="selOne(this,'accomp')">6</div>
+        <div class="chip" data-g="accomp" data-v="7" onclick="selOne(this,'accomp')">7</div>
+        <div class="chip" data-g="accomp" data-v="8" onclick="selOne(this,'accomp')">8</div>
+        <div class="chip" data-g="accomp" data-v="9" onclick="selOne(this,'accomp')">9</div>
+        <div class="chip" data-g="accomp" data-v="10" onclick="selOne(this,'accomp')">10</div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">Position / Role *</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="role" data-v="HOD" onclick="selOne(this,'role')">HOD</div>
+        <div class="chip" data-g="role" data-v="Main Physician" onclick="selOne(this,'role')">Main Physician</div>
+        <div class="chip" data-g="role" data-v="Fellow" onclick="selOne(this,'role')">Fellow</div>
+        <div class="chip" data-g="role" data-v="Distributor" onclick="selOne(this,'role')">Distributor</div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">Customer Type *</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="ctype" data-v="Existing Customer (Not Yet Installed)" onclick="selOne(this,'ctype')">Existing · Not Installed</div>
+        <div class="chip" data-g="ctype" data-v="Existing Customer (Installed)" onclick="selOne(this,'ctype')">Existing · Installed</div>
+        <div class="chip" data-g="ctype" data-v="New Customer" onclick="selOne(this,'ctype')">New Customer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products & Competitors -->
+  <div class="fsec">
+    <div class="fsec-title">Products & Competitors</div>
+    <div class="frow">
+      <div class="flabel">Interested Products * (multi)</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="prod" data-v="FFR" onclick="togMulti(this,'prod')">FFR</div>
+        <div class="chip" data-g="prod" data-v="IVUS" onclick="togMulti(this,'prod')">IVUS</div>
+        <div class="chip" data-g="prod" data-v="MCs" onclick="togMulti(this,'prod')">MCs</div>
+        <div class="chip" data-g="prod" data-v="PFA" onclick="togMulti(this,'prod')">PFA</div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="flabel">Current Competitor(s) (multi)</div>
+      <div class="chip-grid">
+        <div class="chip" data-g="comp" data-v="Philips" onclick="togMulti(this,'comp')">Philips</div>
+        <div class="chip" data-g="comp" data-v="Boston Scientific" onclick="togMulti(this,'comp')">Boston Sci</div>
+        <div class="chip" data-g="comp" data-v="Abbott" onclick="togMulti(this,'comp')">Abbott</div>
+        <div class="chip" data-g="comp" data-v="Acist" onclick="togMulti(this,'comp')">Acist</div>
+        <div class="chip" data-g="comp" data-v="Nipro" onclick="togMulti(this,'comp')">Nipro</div>
+        <div class="chip" data-g="comp" data-v="SonoScape" onclick="togMulti(this,'comp')">SonoScape</div>
+        <div class="chip" data-g="comp" data-v="Pulse Medical" onclick="togMulti(this,'comp')">Pulse Medical</div>
+        <div class="chip" data-g="comp" data-v="Others" onclick="togMulti(this,'comp')">Others</div>
+        <div class="chip" data-g="comp" data-v="None" onclick="togMulti(this,'comp')">None</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Intent -->
+  <div class="fsec">
+    <div class="fsec-title">Intent Level *</div>
+    <div class="chip-grid">
+      <div class="chip intent-h" data-g="intent" data-v="High" onclick="selOne(this,'intent')">🔥 HIGH</div>
+      <div class="chip intent-m" data-g="intent" data-v="Medium" onclick="selOne(this,'intent')">⚡ MEDIUM</div>
+      <div class="chip intent-l" data-g="intent" data-v="Low" onclick="selOne(this,'intent')">❄️ LOW</div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="fsec">
+    <div class="fsec-title">Notes</div>
+    <textarea id="f-notes" placeholder="Key discussion points, follow-up, specific needs…"></textarea>
+  </div>
+
+</div><!-- /form-wrap -->
+<button class="save-btn" onclick="saveRecord()">SAVE RECORD</button>
+</div><!-- /form view -->
+
+
+<!-- ═══════ RECORDS VIEW ═══════ -->
+<div class="view" id="view-records">
+<div class="rec-wrap">
+  <div class="rec-filters">
+    <select id="rf-date" onchange="renderRec()"><option value="">All Dates</option>
+      <option>May 19</option><option>May 20</option><option>May 21</option><option>May 22</option></select>
+    <select id="rf-intent" onchange="renderRec()"><option value="">All Intent</option>
+      <option>High</option><option>Medium</option><option>Low</option></select>
+    <select id="rf-prod" onchange="renderRec()"><option value="">All Products</option>
+      <option>FFR</option><option>IVUS</option><option>MCs</option><option>PFA</option></select>
+    <select id="rf-region" onchange="renderRec()"><option value="">All Regions</option>
+      <option value="Region 1">Region 1</option><option value="Region 2">Region 2</option></select>
+  </div>
+  <div class="rec-count" id="rec-count">— records</div>
+  <div id="rec-list"></div>
+</div>
+</div>
+
+
+<!-- ═══════ STATS VIEW ═══════ -->
+<div class="view" id="view-stats">
+<div class="stats-wrap">
+  <div class="stats-4" id="big-stats"></div>
+  <div id="chart-area"></div>
+  <button class="export-btn" onclick="doExport()">↓ &nbsp; EXPORT TO CSV / EXCEL</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════
+// COUNTRIES
+// ════════════════════════════════════
+const COUNTRIES = [
+  // China & territories
+  'China (Mainland)','China - Hong Kong','China - Macau','China - Taiwan',
+  // Europe
+  'Albania','Austria','Belarus','Belgium','Bosnia & Herzegovina','Bulgaria',
+  'Croatia','Cyprus','Czech Republic','Denmark','Estonia','Finland','France',
+  'Germany','Greece','Hungary','Iceland','Ireland','Italy','Kosovo','Latvia',
+  'Lithuania','Luxembourg','Malta','Moldova','Montenegro','Netherlands',
+  'North Macedonia','Norway','Poland','Portugal','Romania','Serbia','Slovakia',
+  'Slovenia','Spain','Sweden','Switzerland','Ukraine','United Kingdom',
+  // CIS
+  'Armenia','Azerbaijan','Georgia','Kazakhstan','Kyrgyzstan','Russia',
+  'Tajikistan','Turkmenistan','Uzbekistan',
+  // Middle East
+  'Bahrain','Egypt','Iran','Iraq','Israel','Jordan','Kuwait','Lebanon',
+  'Libya','Morocco','Oman','Palestine','Qatar','Saudi Arabia','Syria',
+  'Tunisia','Turkey','United Arab Emirates','Yemen',
+  // Asia Pacific
+  'Australia','Bangladesh','Cambodia','India','Indonesia','Japan','Malaysia',
+  'Myanmar','Nepal','New Zealand','Pakistan','Philippines','Singapore',
+  'South Korea','Sri Lanka','Thailand','Vietnam',
+  // Africa
+  'Algeria','Angola','Cameroon','DR Congo','Ethiopia','Ghana','Kenya',
+  'Mozambique','Nigeria','Rwanda','Senegal','South Africa','Sudan',
+  'Tanzania','Uganda','Zimbabwe',
+  // Latin America
+  'Argentina','Bolivia','Brazil','Chile','Colombia','Costa Rica','Cuba',
+  'Dominican Republic','Ecuador','El Salvador','Guatemala','Honduras',
+  'Mexico','Nicaragua','Panama','Paraguay','Peru','Uruguay','Venezuela'
+].sort((a,b) => {
+  // Put China entries first
+  if (a.startsWith('China') && !b.startsWith('China')) return -1;
+  if (!a.startsWith('China') && b.startsWith('China')) return 1;
+  return a.localeCompare(b);
+});
+
+let filteredC = [...COUNTRIES];
+let selCountry = '';
+let hlIdx = -1;
+
+function filterC(q) {
+  const ql = q.toLowerCase().trim();
+  filteredC = ql ? COUNTRIES.filter(c => c.toLowerCase().includes(ql)) : [...COUNTRIES];
+  hlIdx = -1;
+  renderCDrop();
+  openC();
+}
+function renderCDrop() {
+  const dd = document.getElementById('cdrop');
+  if (!filteredC.length) {
+    dd.innerHTML = `<div class="coption" style="color:var(--text3)">No match — type to add custom</div>`;
+    return;
+  }
+  dd.innerHTML = filteredC.slice(0,50).map((c,i) =>
+    `<div class="coption${i===hlIdx?' hl':''}" onmousedown="pickC('${c.replace(/'/g,"\\'")}')">
+      ${c.startsWith('China') ? '🇨🇳 ' : ''}${c}
+    </div>`
+  ).join('');
+}
+function openC() { renderCDrop(); document.getElementById('cdrop').classList.add('open'); }
+function closeC() {
+  document.getElementById('cdrop').classList.remove('open');
+  const v = document.getElementById('country-inp').value.trim();
+  if (v && !selCountry) pickC(v);
+}
+function pickC(c) {
+  selCountry = c;
+  document.getElementById('country-inp').value = '';
+  document.getElementById('csel').innerHTML =
+    `<div class="cselected">📍 ${c} <span class="cselected-x" onclick="clearC()">×</span></div>`;
+}
+function clearC() {
+  selCountry = '';
+  document.getElementById('csel').innerHTML = '';
+  document.getElementById('country-inp').value = '';
+}
+
+// ════════════════════════════════════
+// CHIP LOGIC
+// ════════════════════════════════════
+const singles = {};
+const multis = {};
+
+function selOne(el, g) {
+  document.querySelectorAll(`[data-g="${g}"]`).forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  singles[g] = el.dataset.v;
+}
+function togMulti(el, g) {
+  if (!multis[g]) multis[g] = [];
+  const v = el.dataset.v;
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    multis[g] = multis[g].filter(x => x !== v);
+  } else {
+    el.classList.add('sel');
+    multis[g].push(v);
+  }
+}
+
+// ════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════
+const KEY = 'europcr2026v2';
+let records = JSON.parse(localStorage.getItem(KEY) || '[]');
+
+function persist() { localStorage.setItem(KEY, JSON.stringify(records)); }
+
+// ════════════════════════════════════
+// TABS
+// ════════════════════════════════════
+function switchTab(t) {
+  ['form','records','stats'].forEach(x => {
+    document.getElementById('view-'+x).classList.toggle('active', x===t);
+    document.getElementById('tab-'+x).classList.toggle('active', x===t);
+  });
+  if (t==='records') renderRec();
+  if (t==='stats') renderStats();
+}
+
+// ════════════════════════════════════
+// SAVE
+// ════════════════════════════════════
+let editId = null;
+
+function saveRecord() {
+  const recorder = document.getElementById('f-recorder').value;
+  const date     = singles['date'];
+  const channel  = singles['channel'];
+  const region   = singles['region'];
+  const country  = selCountry || document.getElementById('country-inp').value.trim();
+  const name     = document.getElementById('f-name').value.trim();
+  const inst     = document.getElementById('f-inst').value.trim();
+  const role     = singles['role'];
+  const ctype    = singles['ctype'];
+  const prods    = (multis['prod']||[]).join(', ');
+  const comps    = (multis['comp']||[]).join(', ');
+  const intent   = singles['intent'];
+  const accomp   = singles['accomp'] || '—';
+  const notes    = document.getElementById('f-notes').value.trim();
+
+  const miss = [];
+  if (!recorder) miss.push('Recorder');
+  if (!date)     miss.push('Date');
+  if (!channel)  miss.push('Channel');
+  if (!region)   miss.push('Region');
+  if (!country)  miss.push('Country');
+  if (!name)     miss.push('Name');
+  if (!role)     miss.push('Role');
+  if (!ctype)    miss.push('Customer Type');
+  if (!prods)    miss.push('Product(s)');
+  if (!intent)   miss.push('Intent');
+
+  if (miss.length) { alert('Required: ' + miss.join(', ')); return; }
+
+  const rec = {
+    id: editId || Date.now().toString(),
+    recorder, date, channel, region, country,
+    name, inst, role, ctype, accomp, prods, comps, intent, notes,
+    cardPhoto: cardPhotoB64 || '',
+    ts: new Date().toISOString()
+  };
+
+  if (editId) {
+    const i = records.findIndex(r => r.id === editId);
+    if (i > -1) records[i] = rec;
+    editId = null;
+  } else {
+    records.unshift(rec);
+  }
+
+  persist();
+  updateStrip();
+  resetForm();
+  showToast('RECORD SAVED');
+}
+
+function resetForm() {
+  document.getElementById('f-recorder').value = '';
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-inst').value = '';
+  document.getElementById('f-notes').value = '';
+  clearC();
+  document.querySelectorAll('.chip.sel').forEach(c => c.classList.remove('sel'));
+  Object.keys(singles).forEach(k => delete singles[k]);
+  Object.keys(multis).forEach(k => delete multis[k]);
+  editId = null;
+  clearCardPhoto();
+  window.scrollTo(0, 0);
+}
+
+// ════════════════════════════════════
+// RECORDS
+// ════════════════════════════════════
+function renderRec() {
+  const fd = document.getElementById('rf-date').value;
+  const fi = document.getElementById('rf-intent').value;
+  const fp = document.getElementById('rf-prod').value;
+  const fr = document.getElementById('rf-region').value;
+
+  let list = records.filter(r => {
+    if (fd && r.date !== fd) return false;
+    if (fi && r.intent !== fi) return false;
+    if (fp && !r.prods.includes(fp)) return false;
+    if (fr && !r.region.startsWith(fr)) return false;
+    return true;
+  });
+
+  document.getElementById('rec-count').innerHTML =
+    `<span style="color:var(--gold)">${list.length}</span> records`;
+
+  const el = document.getElementById('rec-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty">NO RECORDS FOUND</div>';
+    return;
+  }
+
+  el.innerHTML = list.map(r => {
+    const ic = r.intent === 'High' ? 'high' : r.intent === 'Medium' ? 'medium' : 'low';
+    const prods = r.prods ? r.prods.split(', ').map(p => `<span class="rc gold">${p}</span>`).join('') : '';
+    const comps = r.comps ? r.comps.split(', ').map(c => `<span class="rc">${c}</span>`).join('') : '';
+    return `
+    <div class="rcard ${ic}">
+      ${r.cardPhoto ? `<div style="margin-bottom:10px"><img src="${r.cardPhoto}" style="max-height:80px;max-width:140px;object-fit:contain;border:1px solid var(--border);opacity:0.85"></div>` : ''}
+      <div class="rcard-top">
+        <div>
+          <div class="rcard-name">${r.name}</div>
+          <div class="rcard-inst">${r.inst || r.role}</div>
+        </div>
+        <div class="rcard-intent ${ic}">${r.intent.toUpperCase()}</div>
+      </div>
+      <div class="rcard-chips">
+        ${prods}
+        <span class="rc blue">📍 ${r.country}</span>
+        <span class="rc">${r.role}</span>
+        <span class="rc">${r.ctype.replace('Existing Customer','EC')}</span>
+        <span class="rc">${r.channel === 'Active Visit' ? '→ Active' : '← Passive'}</span>
+        ${r.accomp && r.accomp !== '—' ? `<span class="rc gold">👥 +${r.accomp}</span>` : ''}
+      </div>
+      ${comps ? `<div class="rcard-chips" style="margin-top:5px">${comps}</div>` : ''}
+      ${r.notes ? `<div class="rcard-note">${r.notes.slice(0,150)}${r.notes.length>150?'…':''}</div>` : ''}
+      <div class="rcard-meta">
+        <span class="rcard-meta-i">${r.date}</span>
+        <span class="rcard-meta-i">${r.recorder}</span>
+        <span class="rcard-meta-i">${r.region.split(' ')[0]} ${r.region.split(' ')[1]}</span>
+      </div>
+      <div class="rcard-actions">
+        <button class="btn-sm btn-edit" onclick="editRec('${r.id}')">EDIT</button>
+        <button class="btn-sm btn-del"  onclick="delRec('${r.id}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function delRec(id) {
+  if (!confirm('Delete this record?')) return;
+  records = records.filter(r => r.id !== id);
+  persist(); updateStrip(); renderRec();
+  showToast('DELETED');
+}
+
+function editRec(id) {
+  const r = records.find(x => x.id === id);
+  if (!r) return;
+  editId = id;
+  switchTab('form');
+  setTimeout(() => {
+    document.getElementById('f-recorder').value = r.recorder;
+    document.getElementById('f-name').value = r.name;
+    document.getElementById('f-inst').value = r.inst || '';
+    document.getElementById('f-notes').value = r.notes || '';
+    if (r.country) pickC(r.country);
+    // Singles
+    ['date','channel','region','role','ctype','intent'].forEach(g => {
+      const key = g === 'ctype' ? 'ctype' : g;
+      const val = r[key === 'ctype' ? 'ctype' : key];
+      document.querySelectorAll(`[data-g="${g}"]`).forEach(b => {
+        if (b.dataset.v === val) selOne(b, g);
+      });
+    });
+    if (r.accomp && r.accomp !== '—') {
+      const b = document.querySelector(`[data-g="accomp"][data-v="${r.accomp}"]`);
+      if (b) selOne(b, 'accomp');
+    }
+    // Multis
+    if (r.prods) r.prods.split(', ').forEach(v => {
+      const b = document.querySelector(`[data-g="prod"][data-v="${v}"]`);
+      if (b) togMulti(b,'prod');
+    });
+    if (r.comps) r.comps.split(', ').forEach(v => {
+      const b = document.querySelector(`[data-g="comp"][data-v="${v}"]`);
+      if (b) togMulti(b,'comp');
+    });
+  }, 80);
+}
+
+// ════════════════════════════════════
+// STATS
+// ════════════════════════════════════
+function renderStats() {
+  const n = records.length;
+  const high = records.filter(r=>r.intent==='High').length;
+  const med  = records.filter(r=>r.intent==='Medium').length;
+  const low  = records.filter(r=>r.intent==='Low').length;
+  const nNew = records.filter(r=>r.ctype==='New Customer').length;
+
+  document.getElementById('big-stats').innerHTML = `
+    <div class="scard"><div class="scard-num">${n}</div><div class="scard-lbl">TOTAL RECORDS</div></div>
+    <div class="scard"><div class="scard-num red">${high}</div><div class="scard-lbl">HIGH INTENT</div></div>
+    <div class="scard"><div class="scard-num blue">${low}</div><div class="scard-lbl">LOW INTENT</div></div>
+    <div class="scard"><div class="scard-num">${nNew}</div><div class="scard-lbl">NEW CUSTOMERS</div></div>
+  `;
+
+  const byDate   = ['May 19','May 20','May 21','May 22'].map(d => [d, records.filter(r=>r.date===d).length]);
+  const byProd   = ['FFR','IVUS','MCs','PFA'].map(p => [p, records.filter(r=>r.prods.includes(p)).length]);
+  const byRegion = [['Region 1', records.filter(r=>r.region.startsWith('Region 1')).length],
+                    ['Region 2', records.filter(r=>r.region.startsWith('Region 2')).length]];
+  const byMember = ['BELLONA','FABO','ISSAC','JAMES','JASON','JOYCE','LYNETTY','OTHERS']
+    .map(m => [m, records.filter(r=>r.recorder===m).length]).filter(([,v])=>v>0);
+  const byComp = ['Philips','Boston Scientific','Abbott','Acist','Nipro','SonoScape','Pulse Medical']
+    .map(c => [c, records.filter(r=>r.comps.includes(c)).length]).filter(([,v])=>v>0);
+
+  document.getElementById('chart-area').innerHTML = [
+    ['BY DATE', byDate],
+    ['BY PRODUCT', byProd],
+    ['BY REGION', byRegion],
+    ['BY TEAM MEMBER', byMember],
+    ['BY COMPETITOR', byComp],
+  ].map(([title, data]) => {
+    if (!data.length) return '';
+    const max = Math.max(...data.map(([,v])=>v), 1);
+    return `<div class="schart-sec">
+      <div class="schart-title">${title}</div>
+      ${data.map(([l,v]) => `
+        <div class="bar-row">
+          <div class="bar-lbl" title="${l}">${l}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v/max*100).toFixed(0)}%"></div></div>
+          <div class="bar-n">${v}</div>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════
+function doExport() {
+  if (!records.length) { alert('No records.'); return; }
+  const hdr = ['ID','Recorder','Date','Channel','Region','Country','Name','Institution',
+    'Role','Customer Type','Accompanying Persons','Products','Competitors','Intent','Notes','Has Card Photo','Timestamp'];
+  const rows = records.map(r =>
+    [r.id,r.recorder,r.date,r.channel,r.region,r.country,r.name,r.inst||'',
+     r.role,r.ctype,r.accomp||'—',r.prods,r.comps||'',r.intent,r.notes||'',r.cardPhoto?'Yes':'No',r.ts]);
+  const csv = [hdr,...rows].map(row =>
+    row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')
+  ).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `EuroPCR2026_Visitors_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('EXPORT COMPLETE');
+}
+
+// ════════════════════════════════════
+// STRIP & TOAST
+// ════════════════════════════════════
+function updateStrip() {
+  const n = records.length;
+  document.getElementById('nav-total').textContent = n;
+  document.getElementById('s-total').textContent  = n;
+  document.getElementById('s-high').textContent   = records.filter(r=>r.intent==='High').length;
+  document.getElementById('s-med').textContent    = records.filter(r=>r.intent==='Medium').length;
+  document.getElementById('s-low').textContent    = records.filter(r=>r.intent==='Low').length;
+  document.getElementById('s-new').textContent    = records.filter(r=>r.ctype==='New Customer').length;
+  document.getElementById('s-active').textContent = records.filter(r=>r.channel==='Active Visit').length;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ════════════════════════════════════
+// BUSINESS CARD CAMERA
+// ════════════════════════════════════
+let cardPhotoB64 = null;
+let camStream    = null;
+
+function setCamState(state) {
+  // state: 'idle' | 'live' | 'preview'
+  document.getElementById('cam-idle-state').style.display    = state === 'idle'    ? 'block' : 'none';
+  document.getElementById('cam-live-state').style.display    = state === 'live'    ? 'block' : 'none';
+  document.getElementById('cam-preview-state').style.display = state === 'preview' ? 'block' : 'none';
+}
+
+async function startCam() {
+  setCamState('live');
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+    });
+    document.getElementById('cam-video').srcObject = camStream;
+  } catch (e) {
+    setCamState('idle');
+    alert('Camera access denied. Please allow camera in browser settings.');
+  }
+}
+
+function stopCam() {
+  if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; }
+  document.getElementById('cam-video').srcObject = null;
+  setCamState('idle');
+}
+
+function shootCard() {
+  const video  = document.getElementById('cam-video');
+  const canvas = document.getElementById('cam-canvas');
+  canvas.width  = video.videoWidth  || 1280;
+  canvas.height = video.videoHeight || 720;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+  cardPhotoB64  = dataUrl;
+  stopCam();
+  document.getElementById('card-photo-img').src = dataUrl;
+  setCamState('preview');
+  showToast('CARD CAPTURED ✓');
+}
+
+function retakeCam() {
+  cardPhotoB64 = null;
+  document.getElementById('card-photo-img').src = '';
+  startCam();
+}
+
+function clearCardPhoto() {
+  cardPhotoB64 = null;
+  stopCam();
+  document.getElementById('card-photo-img').src = '';
+  setCamState('idle');
+}
+
+
+updateStrip();
+</script>
+</body>
+</html>
