@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EuroPCR 2026 · 访客记录</title>
+<title>EuroPCR 2026 · Visitor Log</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -149,89 +149,161 @@ textarea{resize:none;height:80px;line-height:1.5}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* ── LOGIN ── */
+.login-wrap {
+  position:fixed;inset:0;z-index:9999;
+  background:#0A0A0A;
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box {
+  width:320px;padding:36px 28px;
+  background:#111;border:1px solid #2A2A2A;border-top:3px solid var(--gold);
+  text-align:center;
+}
+.login-logo {
+  width:44px;height:44px;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px;color:#000;
+  margin:0 auto 20px;
+}
+.login-title {
+  font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;
+  letter-spacing:2px;color:var(--gold);margin-bottom:4px;
+}
+.login-sub {
+  font-size:12px;color:var(--text3);margin-bottom:24px;letter-spacing:.3px;
+}
+.login-input {
+  width:100%;padding:13px 14px;
+  background:#181818;border:1px solid #383838;
+  color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:16px;
+  outline:none;text-align:center;letter-spacing:3px;
+  margin-bottom:12px;border-radius:0;
+}
+.login-input:focus { border-color:var(--gold); }
+.login-btn {
+  width:100%;padding:14px;
+  background:var(--gold);border:none;color:#000;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;
+  letter-spacing:1.5px;cursor:pointer;
+}
+.login-btn:active { opacity:.85; }
+.login-err {
+  font-size:12px;color:var(--red);margin-top:10px;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;
+  min-height:18px;
+}
 </style>
 </head>
 <body>
 
-<div id="sync-bar" style="background:#0D0D0D;border-bottom:1px solid #2A2A2A;padding:5px 16px;display:flex;align-items:center;justify-content:space-between">
+<div class="login-wrap" id="login-wrap" style="display:none">
+  <div class="login-box">
+    <div class="login-logo">IL</div>
+    <div class="login-title">EUROPCR 2026</div>
+    
+    <input class="login-input" type="password" id="login-pwd"
+      placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">ENTER</button>
+    <div class="login-err" id="login-err"></div>
+    <div id="login-cancel-wrap" style="display:none;margin-top:12px">
+      <button onclick="cancelLogin()" style="width:100%;padding:11px;background:transparent;border:1px solid #333;color:#555;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer">CANCEL</button>
+    </div>
+  </div>
+</div>
+<div id="sync-bar" style="display:none;background:#0D0D0D;border-bottom:1px solid #2A2A2A;padding:5px 16px;display:flex;align-items:center;justify-content:space-between">
   <div style="display:flex;align-items:center;gap:8px">
     <div id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:#555;flex-shrink:0"></div>
-    <span id="sync-txt" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#555;letter-spacing:0.5px">正在连接…</span>
+    <span id="sync-txt" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#555;letter-spacing:0.5px">Connecting...</span>
   </div>
   <span id="sync-count" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#555"></span>
 </div>
 <div class="nav">
   <div class="nav-badge">IL</div>
   <div>
-    <div class="nav-title" data-zh="EuroPCR 2026 · 访客记录" data-en="EuroPCR 2026 · Visitor Log">EuroPCR 2026 · 访客记录</div>
-    <div class="nav-sub" data-zh="巴黎 · 5月19-22日" data-en="Paris · May 19-22">巴黎 · 5月19-22日</div>
+    <div class="nav-title" >EuroPCR 2026 · Visitor Log</div>
+    <div class="nav-sub" >Paris · May 19-22</div>
   </div>
   <div style="flex:1"></div>
-  <div class="nav-count"><span data-zh="总计" data-en="Total">总计</span> <span id="n-total">0</span></div>
+  <div class="nav-count"><span>Total</span> <span id="n-total">0</span></div>
+  <div onclick="doLogout()" style="margin-left:6px;padding:4px 10px;border:1px solid var(--border2);color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;letter-spacing:1px" title="Switch account">⏏</div>
   <div id="lang-btn" onclick="toggleLang()" style="margin-left:10px;padding:4px 10px;border:1px solid var(--gold);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:1px">EN</div>
 </div>
 
-<div class="strip">
-  <div><div class="sn" id="s-total">0</div><div class="sl" data-zh="总记录" data-en="Total">总记录</div></div>
-  <div><div class="sn" id="s-high" style="color:var(--red)">0</div><div class="sl" data-zh="高意向" data-en="High Intent">高意向</div></div>
-  <div><div class="sn" id="s-med">0</div><div class="sl" data-zh="中意向" data-en="Medium">中意向</div></div>
-  <div><div class="sn" id="s-low" style="color:var(--blue)">0</div><div class="sl" data-zh="低意向" data-en="Low Intent">低意向</div></div>
-  <div><div class="sn" id="s-new">0</div><div class="sl" data-zh="新客户" data-en="New Customer" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div></div>
-  <div><div class="sn" id="s-active">0</div><div class="sl" data-zh="主动拜访" data-en="Active Visit">主动拜访</div></div>
+<div class="strip" style="display:none">
+  <div><div class="sn" id="s-total">0</div><div class="sl" >Total</div></div>
+  <div><div class="sn" id="s-high" style="color:var(--red)">0</div><div class="sl" >High Intent</div></div>
+  <div><div class="sn" id="s-med">0</div><div class="sl" >Medium</div></div>
+  <div><div class="sn" id="s-low" style="color:var(--blue)">0</div><div class="sl" >Low Intent</div></div>
+  <div><div class="sn" id="s-new">0</div><div class="sl" data-zh="新客户" data-en="New Customer" ><span class="c-txt">New Customer</span></div></div>
+  <div><div class="sn" id="s-active">0</div><div class="sl" >Active Visit</div></div>
 </div>
 
 <div class="tabs">
-  <div class="tab on" id="tab-form" onclick="goTab('form')" data-zh="＋ 新增" data-en="＋ New"><span class="t-txt">＋ 新增</span></div>
-  <div class="tab" id="tab-records" onclick="goTab('records')" data-zh="记录列表" data-en="Records"><span class="t-txt">记录列表</span></div>
-  <div class="tab" id="tab-stats" onclick="goTab('stats')" data-zh="统计导出" data-en="Stats"><span class="t-txt">统计导出</span></div>
+  <div class="tab on" id="tab-form" onclick="goTab('form')" ><span class="t-txt">＋ New</span></div>
+  <div class="tab" id="tab-records" onclick="goTab('records')" style="display:none"><span class="t-txt">Records</span></div>
+  <div class="tab" id="tab-stats" onclick="goTab('stats')" style="display:none"><span class="t-txt">Stats</span></div>
 </div>
 
 <!-- ═══ FORM ═══ -->
 <div class="view on" id="view-form">
 
   <div class="sec">
-    <div class="sec-t" data-zh="记录人" data-en="Recorded By">记录人</div>
+    <div class="sec-t" >Recorded By</div>
     <select id="f-rec">
-      <option value="" data-zh="— 选择团队成员 —" data-en="— Select member —">— 选择团队成员 —</option>
+      <option value="" >— Select member —</option>
       <option>ALEX W</option><option>BELLONA</option><option>FARBO</option><option>ISSAC</option>
-      <option>JAMES</option><option>JASON</option><option>JOYCE</option>
+      <option>JOYCE</option>
       <option>LYNETTY</option><option>OTHERS</option>
     </select>
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="拜访信息" data-en="Visit Info">拜访信息</div>
+    <div class="sec-t" >Visit Info</div>
     <div class="frow">
-      <div class="flabel" data-zh="日期 *" data-en="Date *">日期 *</div>
+      <div class="flabel" >Date *</div>
       <div class="chips">
-        <div class="chip" data-g="date" data-v="May 19" onclick="pick(this,'date')">5月19日</div>
-        <div class="chip" data-g="date" data-v="May 20" onclick="pick(this,'date')">5月20日</div>
-        <div class="chip" data-g="date" data-v="May 21" onclick="pick(this,'date')">5月21日</div>
-        <div class="chip" data-g="date" data-v="May 22" onclick="pick(this,'date')">5月22日</div>
+        <div class="chip" data-g="date" data-v="May 19" onclick="pick(this,'date')"><span class="c-txt">May 19</span></div>
+        <div class="chip" data-g="date" data-v="May 20" onclick="pick(this,'date')"><span class="c-txt">May 20</span></div>
+        <div class="chip" data-g="date" data-v="May 21" onclick="pick(this,'date')"><span class="c-txt">May 21</span></div>
+        <div class="chip" data-g="date" data-v="May 22" onclick="pick(this,'date')"><span class="c-txt">May 22</span></div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="拜访方式 *" data-en="Channel *">拜访方式 *</div>
+      <div class="flabel" >Channel *</div>
       <div class="chips">
-        <div class="chip" data-g="ch" data-v="主动拜访" onclick="pick(this,'ch')" data-zh="🚶 主动拜访" data-en="🚶 Active Visit"><span class="c-txt">🚶 主动拜访</span></div>
-        <div class="chip" data-g="ch" data-v="被动来访" onclick="pick(this,'ch')" data-zh="🧲 被动来访" data-en="🧲 Passive Visit"><span class="c-txt">🧲 被动来访</span></div>
+        <div class="chip" data-g="ch" data-v="Active Visit" onclick="pick(this,'ch')" ><span class="c-txt">🚶 Active Visit</span></div>
+        <div class="chip" data-g="ch" data-v="Passive Visit" onclick="pick(this,'ch')" ><span class="c-txt">🧲 Passive Visit</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="大区 & 国家" data-en="Region & Country">大区 & 国家</div>
+    <div class="sec-t" >Region & Country</div>
     <div class="frow">
-      <div class="flabel" data-zh="大区 *" data-en="Region *">大区 *</div>
+      <div class="flabel" >Region *</div>
       <div class="chips">
-        <div class="chip" data-g="region" data-v="国际一区" onclick="pick(this,'region')" data-zh="国际一区" data-en="Region 1"><span class="c-txt">国际一区</span></div>
-        <div class="chip" data-g="region" data-v="国际二区" onclick="pick(this,'region')" data-zh="国际二区" data-en="Region 2"><span class="c-txt">国际二区</span></div>
+        <div class="chip" data-g="region" data-v="Region1" onclick="pick(this,'region')" ><span class="c-txt">Region 1</span></div>
+        <div class="chip" data-g="region" data-v="Region2" onclick="pick(this,'region')" ><span class="c-txt">Region 2</span></div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="国家 / 地区 *" data-en="Country / Territory *">国家 / 地区 *</div>
+      <div class="flabel" >Country / Territory *</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+        <button onclick="quickCountry(this,'Germany')"   class="qc-btn">Germany</button>
+        <button onclick="quickCountry(this,'Italy')"     class="qc-btn">Italy</button>
+        <button onclick="quickCountry(this,'Poland')"    class="qc-btn">Poland</button>
+        <button onclick="quickCountry(this,'UK')"        class="qc-btn">UK</button>
+        <button onclick="quickCountry(this,'Brazil')"    class="qc-btn">Brazil</button>
+        <button onclick="quickCountry(this,'Thailand')"  class="qc-btn">Thailand</button>
+        <button onclick="quickCountry(this,'Turkey')"    class="qc-btn">Turkey</button>
+        <button onclick="quickCountry(this,'Malaysia')"  class="qc-btn">Malaysia</button>
+        <button onclick="quickCountry(this,'Singapore')" class="qc-btn">Singapore</button>
+      </div>
       <div class="cs-wrap">
-        <input class="cs-inp" type="text" id="cs-input" placeholder="搜索国家…" autocomplete="off"
+        <input class="cs-inp" type="text" id="cs-input" placeholder="Search country…" autocomplete="off"
           oninput="csFilter(this.value)" onfocus="csOpen()" onblur="setTimeout(csClose,200)">
         <div class="cs-drop" id="cs-drop"></div>
       </div>
@@ -240,43 +312,50 @@ textarea{resize:none;height:80px;line-height:1.5}
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="客户信息" data-en="Customer Info">客户信息</div>
+    <div class="sec-t" >Customer Info</div>
     <div class="frow">
-      <div class="flabel" data-zh="名片拍照" data-en="Business Card Photo">名片拍照</div>
+      <div class="flabel" >Business Card Photo</div>
       <div id="cam-idle">
-        <button class="cam-btn" onclick="camStart()">
-          <span class="cam-icon">📷</span>
-          <span class="cam-lbl" data-zh="打开摄像头" data-en="OPEN CAMERA">打开摄像头</span>
-        </button>
-        <div class="cam-hint" data-zh="对准名片后拍摄保存" data-en="Point at card and capture">对准名片后拍摄保存</div>
+        <div style="display:flex;gap:8px">
+          <button class="cam-btn" style="flex:1" onclick="camStart()">
+            <span class="cam-icon">📷</span>
+            <span class="cam-lbl">CAMERA</span>
+          </button>
+          <label class="cam-btn" style="flex:1;cursor:pointer">
+            <span class="cam-icon">🖼</span>
+            <span class="cam-lbl">ALBUM</span>
+            <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this)">
+          </label>
+        </div>
+        <div class="cam-hint">Take photo or upload from album</div>
       </div>
       <div class="cam-live" id="cam-live">
         <video id="cam-video" autoplay playsinline muted></video>
         <canvas id="cam-canvas" style="display:none"></canvas>
         <div class="cam-controls">
-          <button class="cam-shoot" onclick="camShoot()" data-zh="⬤ 拍摄" data-en="⬤ CAPTURE"><span class="c-txt">⬤ &nbsp;拍摄</span></button>
-          <button class="cam-cancel" onclick="camStop()" data-zh="取消" data-en="Cancel"><span class="c-txt">取消</span></button>
+          <button class="cam-shoot" onclick="camShoot()" ><span class="c-txt">⬤ &nbsp;CAPTURE</span></button>
+          <button class="cam-cancel" onclick="camStop()" ><span class="c-txt">Cancel</span></button>
         </div>
       </div>
       <div class="cam-preview" id="cam-preview">
         <img id="cam-img" src="">
         <div class="cam-preview-bar">
-          <button class="cam-retake" onclick="camRetake()" data-zh="↩ 重拍" data-en="↩ Retake"><span class="c-txt">↩ 重拍</span></button>
-          <button class="cam-clear" onclick="camClear()" data-zh="✕ 删除" data-en="✕ Remove"><span class="c-txt">✕ 删除</span></button>
+          <button class="cam-retake" onclick="camRetake()" ><span class="c-txt">↩ Retake</span></button>
+          <button class="cam-clear" onclick="camClear()" ><span class="c-txt">✕ Remove</span></button>
         </div>
-        <div class="cam-ok" data-zh="✓ 名片已保存" data-en="✓ Photo saved">✓ 名片已保存</div>
+        <div class="cam-ok" >✓ Photo saved</div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="姓名" data-en="Full Name">姓名</div>
-      <input type="text" id="f-name" placeholder="请输入姓名" data-zh-ph="请输入姓名" data-en-ph="First Last">
+      <div class="flabel" >Full Name</div>
+      <input type="text" id="f-name" placeholder="请输入姓名" placeholder="First Last">
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="机构名称" data-en="Institution">机构名称</div>
-      <input type="text" id="f-inst" placeholder="医院 / 公司名称" data-zh-ph="医院 / 公司名称" data-en-ph="Hospital / Company">
+      <div class="flabel" >Institution</div>
+      <input type="text" id="f-inst" placeholder="医院 / 公司名称" placeholder="Hospital / Company">
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="随行人数" data-en="Accompanying">随行人数</div>
+      <div class="flabel" >Accompanying</div>
       <div class="chips">
         <div class="chip" data-g="acc" data-v="1" onclick="pick(this,'acc')">1</div>
         <div class="chip" data-g="acc" data-v="2" onclick="pick(this,'acc')">2</div>
@@ -291,29 +370,29 @@ textarea{resize:none;height:80px;line-height:1.5}
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="职位 / 角色 *" data-en="Position / Role *">职位 / 角色 *</div>
+      <div class="flabel" >Position / Role *</div>
       <div class="chips">
         <div class="chip" data-g="role" data-v="HOD" onclick="pick(this,'role')">HOD</div>
-        <div class="chip" data-g="role" data-v="主要术者" onclick="pick(this,'role')" data-zh="主要术者" data-en="Main Physician"><span class="c-txt">主要术者</span></div>
+        <div class="chip" data-g="role" data-v="Main Physician" onclick="pick(this,'role')" ><span class="c-txt">Main Physician</span></div>
         <div class="chip" data-g="role" data-v="Fellow" onclick="pick(this,'role')">Fellow</div>
-        <div class="chip" data-g="role" data-v="现有代理商" onclick="pick(this,'role')" data-zh="现有代理商" data-en="Existing Distributor"><span class="c-txt">现有代理商</span></div>
-        <div class="chip" data-g="role" data-v="潜在代理商" onclick="pick(this,'role')" data-zh="潜在代理商" data-en="Potential Distributor"><span class="c-txt">潜在代理商</span></div>
+        <div class="chip" data-g="role" data-v="Existing Distributor" onclick="pick(this,'role')" ><span class="c-txt">Existing Distributor</span></div>
+        <div class="chip" data-g="role" data-v="Potential Distributor" onclick="pick(this,'role')" ><span class="c-txt">Potential Distributor</span></div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="客户类型 *" data-en="Customer Type *">客户类型 *</div>
+      <div class="flabel" >Customer Type *</div>
       <div class="chips" style="flex-direction:column">
-        <div class="chip" data-g="ctype" data-v="现有客户（未入院）" onclick="pick(this,'ctype')" data-zh="现有客户（未入院）" data-en="Existing (Not Installed)"><span class="c-txt">现有客户（未入院）</span></div>
-        <div class="chip" data-g="ctype" data-v="现有客户（已入院）" onclick="pick(this,'ctype')" data-zh="现有客户（已入院）" data-en="Existing (Installed)"><span class="c-txt">现有客户（已入院）</span></div>
-        <div class="chip" data-g="ctype" data-v="新客户" onclick="pick(this,'ctype')" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div>
+        <div class="chip" data-g="ctype" data-v="Existing (Not Installed)" onclick="pick(this,'ctype')" ><span class="c-txt">Existing (Not Installed)</span></div>
+        <div class="chip" data-g="ctype" data-v="Existing (Installed)" onclick="pick(this,'ctype')" ><span class="c-txt">Existing (Installed)</span></div>
+        <div class="chip" data-g="ctype" data-v="New Customer" onclick="pick(this,'ctype')" ><span class="c-txt">New Customer</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="感兴趣产品 & 竞品" data-en="Products & Competitors">感兴趣产品 & 竞品</div>
+    <div class="sec-t" >Products & Competitors</div>
     <div class="frow">
-      <div class="flabel" data-zh="感兴趣产品 *（可多选）" data-en="Interested Products * (multi)">感兴趣产品 *（可多选）</div>
+      <div class="flabel" data-zh="感兴趣产品 *（可多选）" data-en="Interested Products * (multi)">Interested Products * (multi)</div>
       <div class="chips">
         <div class="chip" data-g="prod" data-v="FFR" onclick="multi(this,'prod')">FFR</div>
         <div class="chip" data-g="prod" data-v="IVUS" onclick="multi(this,'prod')">IVUS</div>
@@ -325,7 +404,7 @@ textarea{resize:none;height:80px;line-height:1.5}
       </div>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="现有竞品（可多选）" data-en="Current Competitors (multi)">现有竞品（可多选）</div>
+      <div class="flabel" data-zh="现有竞品（可多选）" data-en="Current Competitors (multi)">Current Competitors (multi)</div>
       <div class="chips">
         <div class="chip" data-g="comp" data-v="Philips" onclick="multi(this,'comp')">Philips</div>
         <div class="chip" data-g="comp" data-v="Boston Scientific" onclick="multi(this,'comp')">Boston Sci</div>
@@ -335,54 +414,54 @@ textarea{resize:none;height:80px;line-height:1.5}
         <div class="chip" data-g="comp" data-v="SonoScape" onclick="multi(this,'comp')">SonoScape</div>
         <div class="chip" data-g="comp" data-v="Pulse Medical" onclick="multi(this,'comp')">Pulse Medical</div>
         <div class="chip" data-g="comp" data-v="Others" onclick="multi(this,'comp')">Others</div>
-        <div class="chip" data-g="comp" data-v="无竞品" onclick="multi(this,'comp')" data-zh="无竞品" data-en="No Competitor"><span class="c-txt">无竞品</span></div>
+        <div class="chip" data-g="comp" data-v="No Competitor" onclick="multi(this,'comp')" ><span class="c-txt">No Competitor</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="意向程度 *" data-en="Intent Level *">意向程度 *</div>
+    <div class="sec-t" >Intent Level *</div>
     <div class="chips">
-      <div class="chip" data-g="intent" data-v="High" onclick="pickIntent(this)" data-zh="🔥 高" data-en="🔥 High"><span class="c-txt">🔥 高</span></div>
-      <div class="chip" data-g="intent" data-v="Medium" onclick="pickIntent(this)" data-zh="⚡ 中" data-en="⚡ Medium"><span class="c-txt">⚡ 中</span></div>
-      <div class="chip" data-g="intent" data-v="Low" onclick="pickIntent(this)" data-zh="❄️ 低" data-en="❄️ Low"><span class="c-txt">❄️ 低</span></div>
+      <div class="chip" data-g="intent" data-v="High" onclick="pickIntent(this)" ><span class="c-txt">🔥 High</span></div>
+      <div class="chip" data-g="intent" data-v="Medium" onclick="pickIntent(this)" ><span class="c-txt">⚡ Medium</span></div>
+      <div class="chip" data-g="intent" data-v="Low" onclick="pickIntent(this)" ><span class="c-txt">❄️ Low</span></div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t" data-zh="备注" data-en="Notes">备注</div>
+    <div class="sec-t" >Notes</div>
     <div class="frow">
-      <div class="flabel" data-zh="沟通备注" data-en="Notes">沟通备注</div>
-      <textarea id="f-notes" placeholder="关键沟通内容、跟进事项、具体需求…" data-zh-ph="关键沟通内容、跟进事项、具体需求…" data-en-ph="Key points, follow-up, needs…"></textarea>
+      <div class="flabel" data-zh="沟通备注" data-en="Notes">Discussion Notes</div>
+      <textarea id="f-notes" placeholder="关键沟通内容、跟进事项、具体需求…" placeholder="Key points, follow-up, specific needs…"></textarea>
     </div>
     <div class="frow">
-      <div class="flabel" data-zh="国家市场动态记录" data-en="Market Intelligence">国家市场动态记录</div>
-      <textarea id="f-market" placeholder="该国家/地区市场动态、竞品情况、政策环境…" data-zh-ph="该国家/地区市场动态、竞品情况、政策环境…" data-en-ph="Market trends, competitors, regulations…"></textarea>
+      <div class="flabel" >Market Intelligence</div>
+      <textarea id="f-market" placeholder="该国家/地区市场动态、竞品情况、政策环境…" placeholder="Market trends, competitors, regulations…"></textarea>
     </div>
   </div>
 
 </div>
-<button class="save-btn" onclick="saveRec()" data-zh="保　存" data-en="SAVE"><span class="c-txt">保　存</span></button>
+<button class="save-btn" onclick="saveRec()" ><span class="c-txt">SAVE RECORD</span></button>
 
 <!-- ═══ RECORDS ═══ -->
 <div class="view" id="view-records">
   <div class="filters">
     <select onchange="renderRecs()">
-      <option value="" id="fd">全部日期</option>
+      <option value="" id="fd">All Dates</option>
       <option>May 19</option><option>May 20</option><option>May 21</option><option>May 22</option>
     </select>
     <select id="fi" onchange="renderRecs()">
-      <option value="" data-zh="全部意向" data-en="All Intent">全部意向</option>
-      <option value="High">高</option><option value="Medium">中</option><option value="Low">低</option>
+      <option value="" >All Intent</option>
+      <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
     </select>
     <select id="fp" onchange="renderRecs()">
-      <option value="" data-zh="全部产品" data-en="All Products">全部产品</option>
+      <option value="" >All Products</option>
       <option>FFR</option><option>IVUS</option><option>PFA</option>
       <option>MCs</option><option>Dual-MCs</option><option>Extension</option><option>Others</option>
     </select>
     <select id="fr" onchange="renderRecs()">
-      <option value="" data-zh="全部大区" data-en="All Regions">全部大区</option>
-      <option value="一区" data-zh="一区" data-en="Region 1">一区</option><option value="二区" data-zh="二区" data-en="Region 2">二区</option>
+      <option value="" >All Regions</option>
+      <option value="一区" >Region 1</option><option value="二区" >Region 2</option>
     </select>
   </div>
   <div class="rec-count" id="rec-cnt"></div>
@@ -391,458 +470,514 @@ textarea{resize:none;height:80px;line-height:1.5}
 
 <!-- ═══ STATS ═══ -->
 <div class="view" id="view-stats">
-  <div class="sg" id="sg"></div>
+  <div class="sg" id="sg" style="grid-template-columns:repeat(5,1fr);margin-bottom:10px"></div>
   <div id="charts"></div>
   <div class="exp-btns">
-    <button class="exp-btn" onclick="exportFull()" data-zh="↓ 导出完整报告（含名片图片）" data-en="↓ Export Full Report (with photos)"><span class="c-txt">↓ &nbsp; 导出完整报告（含名片图片）</span></button>
-    <button class="exp-btn exp-btn2" onclick="exportCSV()" data-zh="↓ 仅导出 CSV" data-en="↓ Export CSV only"><span class="c-txt">↓ &nbsp; 仅导出 CSV</span></button>
+    <button class="exp-btn" onclick="exportFull()" ><span class="c-txt">↓ &nbsp; Export Full Report (with photos)</span></button>
+    <button class="exp-btn exp-btn2" onclick="exportCSV()" ><span class="c-txt">↓ &nbsp; Export CSV only</span></button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script>
-var SUPA_URL = 'https://mavjckbiokhwnqbrlibg.supabase.co/rest/v1';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hdmpja2Jpb2tod25xYnJsaWJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMzk5MzgsImV4cCI6MjA5NDYxNTkzOH0.wxjTqrjBwsMj5lgzu1_eXqfcwmCYGKKquogJovPUt5g';
-var SUPA_H = { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY };
-var KEY = 'europcr2026_v5';
-var recs = JSON.parse(localStorage.getItem(KEY) || '[]');
-var sel = {}; var mul = {}; var selCountry = ''; var camStream = null; var photoB64 = null; var editId = null;
+<script>var SUPA_URL = "https://mavjckbiokhwnqbrlibg.supabase.co/rest/v1";
+var SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hdmpja2Jpb2tod25xYnJsaWJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMzk5MzgsImV4cCI6MjA5NDYxNTkzOH0.wxjTqrjBwsMj5lgzu1_eXqfcwmCYGKKquogJovPUt5g";
+var SUPA_H = {"Content-Type":"application/json","apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY};
+var KEY = "europcr2026_v5";
+var recs = JSON.parse(localStorage.getItem(KEY)||"[]");
+var sel={}, mul={}, selCountry="", camStream=null, photoB64=null, editId=null;
 
-// ── SYNC UI ──
-function syncStatus(ok, msg) {
-  var dot = document.getElementById('sync-dot');
-  var txt = document.getElementById('sync-txt');
-  dot.style.background = ok ? '#4A8A5A' : '#D4533A';
-  txt.textContent = msg;
-  txt.style.color = ok ? '#4A8A5A' : '#D4533A';
+// ── SUPABASE ──
+function syncStatus(ok,msg){
+  var dot=document.getElementById("sync-dot");
+  var txt=document.getElementById("sync-txt");
+  if(!dot||!txt)return;
+  dot.style.background=ok?"#4A8A5A":"#D4533A";
+  txt.textContent=msg;
+  txt.style.color=ok?"#4A8A5A":"#D4533A";
 }
-
-// ── LOAD FROM CLOUD ──
-async function loadFromCloud() {
-  syncStatus(false, '正在连接云端…');
-  try {
-    var resp = await fetch(SUPA_URL + '/visitors?order=created_at.desc&limit=500', {
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
-    });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    var data = await resp.json();
-    recs = data.map(function(r) {
-      return { id:r.id, recorder:r.recorder||'', date:r.visit_date||'', channel:r.channel||'',
-        region:r.region||'', country:r.country||'', name:r.name||'', inst:r.institution||'',
-        role:r.role||'', ctype:r.customer_type||'', acc:r.accompanying||'—',
-        prods:r.products||'', comps:r.competitors||'', intent:r.intent||'',
-        notes:r.notes||'', market:r.market||'', photo:r.photo||'', ts:r.created_at||'' };
-    });
-    localStorage.setItem(KEY, JSON.stringify(recs));
+async function loadFromCloud(){
+  syncStatus(false,"Connecting...");
+  try{
+    var resp=await fetch(SUPA_URL+"/visitors?order=created_at.desc&limit=500",{headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}});
+    if(!resp.ok)throw new Error("HTTP "+resp.status);
+    var data=await resp.json();
+    recs=data.map(function(r){return{id:r.id,recorder:r.recorder||"",date:r.visit_date||"",channel:r.channel||"",region:r.region||"",country:r.country||"",name:r.name||"",inst:r.institution||"",role:r.role||"",ctype:r.customer_type||"",acc:r.accompanying||"—",prods:r.products||"",comps:r.competitors||"",intent:r.intent||"",notes:r.notes||"",market:r.market||"",photo:r.photo||"",ts:r.created_at||""};});
+    localStorage.setItem(KEY,JSON.stringify(recs));
     updateStrip();
-    syncStatus(true, '已同步 · 实时更新');
-    document.getElementById('sync-count').textContent = '云端 ' + recs.length + ' 条';
-    if (document.getElementById('view-records').classList.contains('on')) renderRecs();
-    if (document.getElementById('view-stats').classList.contains('on')) renderStats();
-  } catch(e) {
-    syncStatus(false, '离线模式（本地保存）');
-  }
+    syncStatus(true,"Synced");
+    document.getElementById("sync-count").textContent="Cloud: "+recs.length;
+    if(document.getElementById("view-records").classList.contains("on"))renderRecs();
+    if(document.getElementById("view-stats").classList.contains("on"))renderStats();
+  }catch(e){syncStatus(false,"Offline (local)");}
 }
-
-// ── SAVE TO CLOUD ──
-async function saveToCloud(r) {
-  var payload = { id:r.id, recorder:r.recorder, visit_date:r.date, channel:r.channel,
-    region:r.region, country:r.country, name:r.name||null, institution:r.inst||null,
-    role:r.role, customer_type:r.ctype||null, accompanying:r.acc, products:r.prods,
-    competitors:r.comps||null, intent:r.intent||null, notes:r.notes||null,
-    market:r.market||null, photo:r.photo||null };
-  try {
-    var h = Object.assign({}, SUPA_H, { 'Prefer': 'return=minimal,resolution=merge-duplicates' });
-    var resp = await fetch(SUPA_URL + '/visitors', { method:'POST', headers:h, body:JSON.stringify(payload) });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    syncStatus(true, '已同步 · 实时更新');
-    document.getElementById('sync-count').textContent = '云端 ' + recs.length + ' 条';
-  } catch(e) {
-    syncStatus(false, '保存到云端失败，已本地保存');
-  }
+function saveToCloud(r){
+  var payload={id:r.id,recorder:r.recorder,visit_date:r.date,channel:r.channel,region:r.region,country:r.country,name:r.name||null,institution:r.inst||null,role:r.role||null,customer_type:r.ctype||null,accompanying:r.acc,products:r.prods,competitors:r.comps||null,intent:r.intent||null,notes:r.notes||null,market:r.market||null,photo:r.photo||null};
+  var h=Object.assign({},SUPA_H,{"Prefer":"return=minimal,resolution=merge-duplicates"});
+  fetch(SUPA_URL+"/visitors",{method:"POST",headers:h,body:JSON.stringify(payload)})
+    .then(function(resp){if(resp.ok){syncStatus(true,"Synced");document.getElementById("sync-count").textContent="Cloud: "+recs.length;}else{syncStatus(false,"Sync failed - saved locally");}})
+    .catch(function(){syncStatus(false,"Offline - saved locally");});
 }
-
-// ── DELETE FROM CLOUD ──
-async function deleteFromCloud(id) {
-  try {
-    await fetch(SUPA_URL + '/visitors?id=eq.' + id, {
-      method:'DELETE', headers:{ 'apikey':SUPA_KEY, 'Authorization':'Bearer ' + SUPA_KEY }
-    });
-  } catch(e) {}
+function deleteFromCloud(id){
+  fetch(SUPA_URL+"/visitors?id=eq."+id,{method:"DELETE",headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}}).catch(function(){});
 }
-
-// Poll every 30 seconds
-setInterval(loadFromCloud, 30000);
+setInterval(loadFromCloud,30000);
 
 // ── COUNTRIES ──
-var COUNTRIES = [
-  // Greater China
-  'China (Mainland)', 'China - Hong Kong', 'China - Macau', 'China - Taiwan',
-
-  // Europe (含英国及所有欧洲主权国家)
-  'Albania', 'Andorra', 'Austria', 'Belarus', 'Belgium', 'Bosnia & Herzegovina', 
-  'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 
-  'Finland', 'France', 'Germany', 'Greece', 'Holy See', 'Hungary', 'Iceland', 
-  'Ireland', 'Italy', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania', 
-  'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro', 'Netherlands', 
-  'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'San Marino', 
-  'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 
-  'Ukraine', 'UK',
-
-  // North America
-  'Canada', 'United States',
-
-  // Asia-Pacific (不含已剔除国家)
-  'Afghanistan', 'Australia', 'Bangladesh', 'Bhutan', 'Brunei', 'Cambodia', 
-  'Fiji', 'India', 'Indonesia', 'Japan', 'Kiribati', 'Laos', 'Malaysia', 
-  'Maldives', 'Marshall Islands', 'Micronesia', 'Mongolia', 'Myanmar', 'Nauru', 
-  'Nepal', 'New Zealand', 'Pakistan', 'Palau', 'Papua New Guinea', 'Philippines', 
-  'Samoa', 'Solomon Islands', 'South Korea', 'Sri Lanka', 'Thailand', 
-  'Timor-Leste', 'Tonga', 'Tuvalu', 'Vanuatu', 'Vietnam',
-
-  // Middle East & North Africa
-  'Algeria', 'Bahrain', 'Egypt', 'Iran', 'Iraq', 'Israel', 'Jordan', 'Kuwait', 
-  'Lebanon', 'Libya', 'Morocco', 'Oman', 'Palestine', 'Qatar', 'Saudi Arabia', 
-  'Syria', 'Tunisia', 'Turkey', 'United Arab Emirates', 'Yemen',
-
-  // CIS & Central Asia
-  'Armenia', 'Azerbaijan', 'Georgia', 'Kazakhstan', 'Kyrgyzstan', 'Russia', 
-  'Tajikistan', 'Turkmenistan', 'Uzbekistan',
-
-  // Latin America & Caribbean
-  'Antigua & Barbuda', 'Argentina', 'Bahamas', 'Barbados', 'Belize', 'Bolivia', 
-  'Brazil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba', 'Dominica', 
-  'Dominican Republic', 'Ecuador', 'El Salvador', 'Grenada', 'Guatemala', 
-  'Guyana', 'Haiti', 'Honduras', 'Jamaica', 'Mexico', 'Nicaragua', 'Panama', 
-  'Paraguay', 'Peru', 'St. Kitts & Nevis', 'St. Lucia', 'St. Vincent & Grenadines', 
-  'Suriname', 'Trinidad & Tobago', 'Uruguay', 'Venezuela',
-
-  // Sub-Saharan Africa
-  'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cabo Verde', 
-  'Cameroon', 'Central African Republic', 'Chad', 'Comoros', 'Congo', 
-  'Cote d\'Ivoire', 'DR Congo', 'Djibouti', 'Equatorial Guinea', 'Eritrea', 
-  'Eswatini', 'Ethiopia', 'Gabon', 'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 
-  'Kenya', 'Lesotho', 'Liberia', 'Madagascar', 'Malawi', 'Mali', 'Mauritania', 
-  'Mauritius', 'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda', 
-  'Sao Tome & Principe', 'Senegal', 'Seychelles', 'Sierra Leone', 'Somalia', 
-  'South Africa', 'South Sudan', 'Sudan', 'Tanzania', 'Togo', 'Uganda', 
-  'Zambia', 'Zimbabwe'
-].sort(function(a,b){ var ac=a.startsWith('China'),bc=b.startsWith('China'); if(ac&&!bc)return -1; if(!ac&&bc)return 1; return a.localeCompare(b); });
+var COUNTRIES = ["China (Mainland)", "China - Hong Kong", "China - Macau", "China - Taiwan", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua & Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "DR Congo", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Samoa", "San Marino", "Sao Tome & Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia", "St Vincent & Grenadines", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "UAE", "UK", "USA", "Uganda", "Ukraine", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"].sort(function(a,b){var ac=a.startsWith("China"),bc=b.startsWith("China");if(ac&&!bc)return -1;if(!ac&&bc)return 1;return a.localeCompare(b);});
 
 var filteredC = COUNTRIES.slice();
 
-function csFilter(q) {
-  var ql = q.toLowerCase().trim();
-  filteredC = ql ? COUNTRIES.filter(function(c){ return c.toLowerCase().indexOf(ql)>-1; }) : COUNTRIES.slice();
-  csRender(); document.getElementById('cs-drop').classList.add('open');
+function csFilter(q){
+  var ql=q.toLowerCase().trim();
+  filteredC=ql?COUNTRIES.filter(function(c){return c.toLowerCase().indexOf(ql)>-1;}):COUNTRIES.slice();
+  csRender();
+  document.getElementById("cs-drop").classList.add("open");
 }
-function csRender() {
-  var dd = document.getElementById('cs-drop');
-  var list = filteredC.slice(0,60);
-  if (!list.length) { dd.innerHTML = '<div class="cs-opt" style="color:var(--text3)">无匹配</div>'; return; }
-  dd.innerHTML = list.map(function(c) {
-    var safe = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    return '<div class="cs-opt" onmousedown="csPick(\'' + safe + '\')">' + (c.startsWith('China')?'🇨🇳 ':'') + c + '</div>';
-  }).join('');
+function csRender(){
+  var dd=document.getElementById("cs-drop");
+  var list=filteredC.slice(0,80);
+  if(!list.length){dd.innerHTML="<div class=\"cs-opt\" style=\"color:var(--text3)\">No match</div>";return;}
+  dd.innerHTML=list.map(function(c){
+    var safe=c.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+    return "<div class=\"cs-opt\" onmousedown=\"csPick('"+safe+"')\">"+( c.startsWith("China")?"🇨🇳 ":"")+c+"</div>";
+  }).join("");
 }
-function csOpen() { csRender(); document.getElementById('cs-drop').classList.add('open'); }
-function csClose() {
-  document.getElementById('cs-drop').classList.remove('open');
-  var v = document.getElementById('cs-input').value.trim();
-  if (v && !selCountry) csPick(v);
+function csOpen(){csRender();document.getElementById("cs-drop").classList.add("open");}
+function csClose(){
+  document.getElementById("cs-drop").classList.remove("open");
+  var v=document.getElementById("cs-input").value.trim();
+  if(v&&!selCountry)csPick(v);
 }
-function csPick(c) {
-  selCountry = c; document.getElementById('cs-input').value = '';
-  document.getElementById('cs-sel').innerHTML = '<div class="cs-tag">📍 ' + c + ' <span class="cs-x" onclick="csClear()">×</span></div>';
+function csPick(c){
+  selCountry=c;
+  document.getElementById("cs-input").value="";
+  document.getElementById("cs-sel").innerHTML="<div class=\"cs-tag\">📍 "+c+" <span class=\"cs-x\" onclick=\"csClear()\">×</span></div>";
 }
-function csClear() { selCountry=''; document.getElementById('cs-sel').innerHTML=''; document.getElementById('cs-input').value=''; }
+function quickCountry(el,c){
+  // Deselect all quick buttons
+  document.querySelectorAll(".qc-btn").forEach(function(b){b.classList.remove("qc-sel");});
+  el.classList.add("qc-sel");
+  csPick(c);
+}
+function csClear(){selCountry="";document.getElementById("cs-sel").innerHTML="";document.getElementById("cs-input").value="";document.querySelectorAll(".qc-btn").forEach(function(b){b.classList.remove("qc-sel");});}
 
 // ── CHIPS ──
-function pick(el,g) {
-  document.querySelectorAll('[data-g="'+g+'"]').forEach(function(b){ b.classList.remove('on','on-red','on-blue'); });
-  el.classList.add('on'); sel[g]=el.dataset.v;
-}
-function pickIntent(el) {
-  document.querySelectorAll('[data-g="intent"]').forEach(function(b){ b.classList.remove('on','on-red','on-blue'); });
-  var v=el.dataset.v; el.classList.add(v==='High'?'on-red':v==='Low'?'on-blue':'on'); sel['intent']=v;
-}
-function multi(el,g) {
-  if(!mul[g])mul[g]=[];
-  var v=el.dataset.v;
-  if(el.classList.contains('on')){ el.classList.remove('on'); mul[g]=mul[g].filter(function(x){return x!==v;}); }
-  else { el.classList.add('on'); mul[g].push(v); }
-}
+function pick(el,g){document.querySelectorAll("[data-g=\""+g+"\"]").forEach(function(b){b.classList.remove("on","on-red","on-blue");});el.classList.add("on");sel[g]=el.dataset.v;}
+function pickIntent(el){document.querySelectorAll("[data-g=\"intent\"]").forEach(function(b){b.classList.remove("on","on-red","on-blue");});var v=el.dataset.v;el.classList.add(v==="High"?"on-red":v==="Low"?"on-blue":"on");sel["intent"]=v;}
+function multi(el,g){if(!mul[g])mul[g]=[];var v=el.dataset.v;if(el.classList.contains("on")){el.classList.remove("on");mul[g]=mul[g].filter(function(x){return x!==v;});}else{el.classList.add("on");mul[g].push(v);}}
 
 // ── CAMERA ──
-function camStart() {
-  document.getElementById('cam-idle').style.display='none';
-  document.getElementById('cam-live').style.display='block';
-  document.getElementById('cam-preview').style.display='none';
-  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}})
-    .then(function(s){ camStream=s; document.getElementById('cam-video').srcObject=s; })
-    .catch(function(){ alert('无法访问摄像头'); camStop(); });
+function handleUpload(input){
+  var file=input.files[0]; if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){photoB64=ev.target.result;document.getElementById("cam-img").src=photoB64;document.getElementById("cam-idle").style.display="none";document.getElementById("cam-preview").style.display="block";toast("Photo uploaded");};
+  reader.readAsDataURL(file);
 }
-function camStop() {
-  if(camStream){ camStream.getTracks().forEach(function(t){t.stop();}); camStream=null; }
-  document.getElementById('cam-video').srcObject=null;
-  document.getElementById('cam-idle').style.display='block';
-  document.getElementById('cam-live').style.display='none';
+function camStart(){
+  document.getElementById("cam-idle").style.display="none";
+  document.getElementById("cam-live").style.display="block";
+  document.getElementById("cam-preview").style.display="none";
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}}})
+    .then(function(s){camStream=s;document.getElementById("cam-video").srcObject=s;})
+    .catch(function(){alert("Camera access denied");camStop();});
 }
-function camShoot() {
-  var v=document.getElementById('cam-video'); var c=document.getElementById('cam-canvas');
-  c.width=v.videoWidth||1280; c.height=v.videoHeight||720;
-  c.getContext('2d').drawImage(v,0,0);
-  photoB64=c.toDataURL('image/jpeg',0.85); camStop();
-  document.getElementById('cam-img').src=photoB64;
-  document.getElementById('cam-idle').style.display='none';
-  document.getElementById('cam-preview').style.display='block';
-  toast('✓ 名片已拍摄');
+function camStop(){
+  if(camStream){camStream.getTracks().forEach(function(t){t.stop();});camStream=null;}
+  document.getElementById("cam-video").srcObject=null;
+  document.getElementById("cam-idle").style.display="block";
+  document.getElementById("cam-live").style.display="none";
 }
-function camRetake() { photoB64=null; document.getElementById('cam-img').src=''; document.getElementById('cam-preview').style.display='none'; camStart(); }
-function camClear() { photoB64=null; document.getElementById('cam-img').src=''; document.getElementById('cam-preview').style.display='none'; document.getElementById('cam-idle').style.display='block'; }
+function camShoot(){
+  var v=document.getElementById("cam-video"),c=document.getElementById("cam-canvas");
+  c.width=v.videoWidth||1280;c.height=v.videoHeight||720;
+  c.getContext("2d").drawImage(v,0,0);
+  photoB64=c.toDataURL("image/jpeg",0.85);
+  camStop();
+  document.getElementById("cam-img").src=photoB64;
+  document.getElementById("cam-idle").style.display="none";
+  document.getElementById("cam-preview").style.display="block";
+  toast("Photo captured");
+}
+function camRetake(){photoB64=null;document.getElementById("cam-img").src="";document.getElementById("cam-preview").style.display="none";camStart();}
+function camClear(){photoB64=null;document.getElementById("cam-img").src="";document.getElementById("cam-preview").style.display="none";document.getElementById("cam-idle").style.display="block";}
 
 // ── SAVE ──
-async function saveRec() {
-  var rec_val=document.getElementById('f-rec').value;
-  var date=sel['date']; var ch=sel['ch']; var region=sel['region'];
-  var country=selCountry||document.getElementById('cs-input').value.trim();
-  var role=sel['role']; var ctype=sel['ctype']; var intent=sel['intent'];
-  var prods=(mul['prod']||[]).join(', ');
+function saveRec(){
+  var rec_val=document.getElementById("f-rec").value;
+  var date=sel["date"],ch=sel["ch"],region=sel["region"];
+  var country=selCountry||document.getElementById("cs-input").value.trim();
+  var role=sel["role"],ctype=sel["ctype"],intent=sel["intent"];
+  var prods=(mul["prod"]||[]).join(", ");
   var miss=[];
-  if(!rec_val)miss.push('记录人'); if(!date)miss.push('日期'); if(!ch)miss.push('拜访方式');
-  if(!region)miss.push('大区'); if(!country)miss.push('国家'); if(!role)miss.push('职位');
-  if(['HOD','主要术者','Fellow'].indexOf(role)>-1&&!ctype)miss.push('客户类型');
-  if(!prods)miss.push('感兴趣产品');
-  if(miss.length){ alert('请完成必填项：'+miss.join('、')); return; }
-  var r={ id:editId||String(Date.now()), recorder:rec_val, date:date, channel:ch, region:region,
-    country:country, name:document.getElementById('f-name').value.trim(),
-    inst:document.getElementById('f-inst').value.trim(), role:role, ctype:ctype||'',
-    acc:sel['acc']||'—', prods:prods, comps:(mul['comp']||[]).join(', '),
-    intent:intent||'', notes:document.getElementById('f-notes').value.trim(),
-    market:document.getElementById('f-market').value.trim(), photo:photoB64||'', ts:new Date().toISOString() };
-  if(editId){ var idx=recs.findIndex(function(x){return x.id===editId;}); if(idx>-1)recs[idx]=r; editId=null; }
-  else { recs.unshift(r); }
+  if(!rec_val)miss.push("Recorder");
+  if(!date)miss.push("Date");
+  if(!region)miss.push("Region");
+  if(miss.length){alert("Required: "+miss.join(", "));return;}
+  var r={id:editId||String(Date.now()),recorder:rec_val,date:date,channel:ch||"",region:region,country:country,name:document.getElementById("f-name").value.trim(),inst:document.getElementById("f-inst").value.trim(),role:role||"",ctype:ctype||"",acc:sel["acc"]||"—",prods:prods,comps:(mul["comp"]||[]).join(", "),intent:intent||"",notes:document.getElementById("f-notes").value.trim(),market:document.getElementById("f-market").value.trim(),photo:photoB64||"",ts:new Date().toISOString()};
+  if(editId){var idx=recs.findIndex(function(x){return x.id===editId;});if(idx>-1)recs[idx]=r;editId=null;}
+  else{recs.unshift(r);}
   localStorage.setItem(KEY,JSON.stringify(recs));
-  updateStrip(); syncStatus(false,'正在同步…');
-  await saveToCloud(r);
-  resetForm(); toast('✓ 已保存并同步');
+  updateStrip();
+  syncStatus(false,"Syncing...");
+  saveToCloud(r);
+  resetForm();
+  toast("Saved & synced");
 }
 
-function resetForm() {
-  document.getElementById('f-rec').value=''; document.getElementById('f-name').value='';
-  document.getElementById('f-inst').value=''; document.getElementById('f-notes').value='';
-  document.getElementById('f-market').value='';
-  csClear(); camClear();
-  document.querySelectorAll('.chip.on,.chip.on-red,.chip.on-blue').forEach(function(c){c.classList.remove('on','on-red','on-blue');});
-  sel={}; mul={}; editId=null; window.scrollTo(0,0);
+function resetForm(){
+  document.getElementById("f-rec").value="";document.getElementById("f-name").value="";
+  document.getElementById("f-inst").value="";document.getElementById("f-notes").value="";
+  document.getElementById("f-market").value="";
+  csClear();camClear();
+  document.querySelectorAll(".chip.on,.chip.on-red,.chip.on-blue").forEach(function(c){c.classList.remove("on","on-red","on-blue");});
+  sel={};mul={};editId=null;window.scrollTo(0,0);
 }
 
 // ── TABS ──
-function goTab(t) {
-  ['form','records','stats'].forEach(function(x){
-    document.getElementById('view-'+x).classList.toggle('on',x===t);
-    document.getElementById('tab-'+x).classList.toggle('on',x===t);
-  });
-  if(t==='records'){ loadFromCloud(); renderRecs(); }
-  if(t==='stats') renderStats();
+function goTab(t){
+  ["form","records","stats"].forEach(function(x){document.getElementById("view-"+x).classList.toggle("on",x===t);document.getElementById("tab-"+x).classList.toggle("on",x===t);});
+  if(t==="records"){loadFromCloud();renderRecs();}
+  if(t==="stats")renderStats();
 }
 
 // ── RECORDS ──
-function renderRecs() {
-  var fd=document.querySelector('#view-records .filters select:nth-child(1)').value;
-  var fi=document.getElementById('fi').value; var fp=document.getElementById('fp').value; var fr=document.getElementById('fr').value;
+function renderRecs(){
+  var fd=document.querySelector("#view-records .filters select:nth-child(1)").value;
+  var fi=document.getElementById("fi").value,fp=document.getElementById("fp").value,fr=document.getElementById("fr").value;
   var list=recs.filter(function(r){
-    if(fd&&r.date!==fd)return false; if(fi&&r.intent!==fi)return false;
-    if(fp&&r.prods.indexOf(fp)<0)return false; if(fr&&r.region.indexOf(fr)<0)return false; return true;
+    if(fd&&r.date!==fd)return false;
+    if(fi&&r.intent!==fi)return false;
+    if(fp&&r.prods.indexOf(fp)<0)return false;
+    if(fr&&r.region!==fr)return false;
+    return true;
   });
-  document.getElementById('rec-cnt').innerHTML='共 <b>'+list.length+'</b> 条记录';
-  var el=document.getElementById('rec-list');
-  if(!list.length){ el.innerHTML='<div class="empty">暂无记录</div>'; return; }
+  document.getElementById("rec-cnt").innerHTML="<b>"+list.length+"</b> records";
+  var el=document.getElementById("rec-list");
+  if(!list.length){el.innerHTML="<div class=\"empty\">No records</div>";return;}
   el.innerHTML=list.map(function(r){
-    var ic=r.intent==='High'?'H':r.intent==='Medium'?'M':'L';
-    var il=r.intent==='High'?'🔥 高':r.intent==='Medium'?'⚡ 中':r.intent==='Low'?'❄️ 低':'—';
-    var prods=r.prods?r.prods.split(', ').map(function(p){return '<span class="rt g">'+p+'</span>';}).join(''):'';
-    var comps=r.comps?r.comps.split(', ').map(function(c){return '<span class="rt">'+c+'</span>';}).join(''):'';
-    return '<div class="rcard '+ic+'">'+
-      (r.photo?'<img src="'+r.photo+'" style="width:100%;max-height:140px;object-fit:contain;border:1px solid var(--gold);background:#000;margin-bottom:10px">':'')+
-      '<div class="rcard-head"><div>'+
-      '<div class="rcard-name">'+(r.name||'<span style="color:var(--text3);font-style:italic;font-size:13px">— 未填写姓名 —</span>')+'</div>'+
-      '<div class="rcard-inst">'+(r.inst||'<span style="color:var(--text3);font-style:italic">— 未填写机构 —</span>')+'</div>'+
-      '</div><div class="rbadge '+ic+'">'+il+'</div></div>'+
-      '<div class="rtags">'+prods+
-      '<span class="rt b">📍 '+(r.country||'—')+'</span>'+
-      '<span class="rt">'+(r.role||'—')+'</span>'+
-      (r.ctype?'<span class="rt">'+r.ctype+'</span>':'')+
-      (r.acc&&r.acc!=='—'?'<span class="rt g">随行 '+r.acc+' 人</span>':'')+
-      '<span class="rt">'+(r.channel==='主动拜访'?'→ 主动':'← 被动')+'</span>'+
-      '</div>'+
-      (comps?'<div class="rtags" style="margin-top:5px">'+comps+'</div>':'')+
-      (r.notes?'<div class="rnote">'+r.notes.slice(0,150)+(r.notes.length>150?'…':'')+'</div>':'')+
-      (r.market?'<div class="rmkt">🌏 '+r.market.slice(0,120)+(r.market.length>120?'…':'')+'</div>':'')+
-      '<div class="rmeta"><span class="rmeta-i">'+(r.date||'')+'</span><span class="rmeta-i">'+(r.recorder||'')+'</span><span class="rmeta-i">'+(r.region||'')+'</span></div>'+
-      '<div class="ract"><button class="btn-edit" onclick="editRec(\''+r.id+'\')">编辑</button><button class="btn-del" onclick="delRec(\''+r.id+'\')">删除</button></div>'+
-      '</div>';
-  }).join('');
+    var ic=r.intent==="High"?"H":r.intent==="Medium"?"M":"L";
+    var il=r.intent==="High"?"🔥 High":r.intent==="Medium"?"⚡ Med":r.intent==="Low"?"❄️ Low":"—";
+    var prods=r.prods?r.prods.split(", ").map(function(p){return"<span class=\"rt g\">"+p+"</span>";}).join(""):"";
+    var comps=r.comps?r.comps.split(", ").map(function(c){return"<span class=\"rt\">"+c+"</span>";}).join(""):"";
+    return "<div class=\"rcard "+ic+"\">"+(r.photo?"<img src=\""+r.photo+"\" style=\"width:100%;max-height:140px;object-fit:contain;border:1px solid var(--gold);background:#000;margin-bottom:10px\">":"")+
+      "<div class=\"rcard-head\"><div><div class=\"rcard-name\">"+(r.name||"<span style=\"color:var(--text3);font-style:italic;font-size:13px\">— No name —</span>")+"</div><div class=\"rcard-inst\">"+(r.inst||"<span style=\"color:var(--text3);font-style:italic\">— No institution —</span>")+"</div></div><div class=\"rbadge "+ic+"\">"+il+"</div></div>"+
+      "<div class=\"rtags\">"+prods+"<span class=\"rt b\">📍 "+(r.country||"—")+"</span>"+(r.role?"<span class=\"rt\">"+r.role+"</span>":"")+(r.ctype?"<span class=\"rt\">"+r.ctype+"</span>":"")+(r.acc&&r.acc!=="—"?"<span class=\"rt g\">+"+r.acc+"</span>":"")+(r.channel?"<span class=\"rt\">"+(r.channel==="Active Visit"?"→ Active":"← Passive")+"</span>":"")+"</div>"+
+      (comps?"<div class=\"rtags\" style=\"margin-top:5px\">"+comps+"</div>":"")+
+      (r.notes?"<div class=\"rnote\">"+r.notes.slice(0,150)+(r.notes.length>150?"…":"")+"</div>":"")+
+      (r.market?"<div class=\"rmkt\">🌏 "+r.market.slice(0,120)+(r.market.length>120?"…":"")+"</div>":"")+
+      "<div class=\"rmeta\"><span class=\"rmeta-i\">"+(r.date||"")+"</span><span class=\"rmeta-i\">"+(r.recorder||"")+"</span><span class=\"rmeta-i\">"+(r.region||"")+"</span></div>"+
+      "<div class=\"ract\"><button class=\"btn-edit\" onclick=\"editRec('"+r.id+"')\">Edit</button><button class=\"btn-del\" onclick=\"delRec('"+r.id+"')\">Delete</button></div></div>";
+  }).join("");
 }
 
-async function delRec(id) {
-  if(!confirm('确定删除这条记录？'))return;
+function delRec(id){
+  if(!confirm("Delete this record?"))return;
   recs=recs.filter(function(r){return r.id!==id;});
   localStorage.setItem(KEY,JSON.stringify(recs));
-  await deleteFromCloud(id);
-  updateStrip(); renderRecs(); toast('已删除');
+  deleteFromCloud(id);updateStrip();renderRecs();toast("Deleted");
 }
-
-function editRec(id) {
-  var r=recs.find(function(x){return x.id===id;}); if(!r)return;
-  editId=id; goTab('form');
+function editRec(id){
+  var r=recs.find(function(x){return x.id===id;});if(!r)return;
+  editId=id;goTab("form");
   setTimeout(function(){
-    document.getElementById('f-rec').value=r.recorder||'';
-    document.getElementById('f-name').value=r.name||'';
-    document.getElementById('f-inst').value=r.inst||'';
-    document.getElementById('f-notes').value=r.notes||'';
-    document.getElementById('f-market').value=r.market||'';
+    document.getElementById("f-rec").value=r.recorder||"";
+    document.getElementById("f-name").value=r.name||"";
+    document.getElementById("f-inst").value=r.inst||"";
+    document.getElementById("f-notes").value=r.notes||"";
+    document.getElementById("f-market").value=r.market||"";
     if(r.country)csPick(r.country);
-    if(r.photo){ photoB64=r.photo; document.getElementById('cam-img').src=r.photo; document.getElementById('cam-idle').style.display='none'; document.getElementById('cam-preview').style.display='block'; }
-    ['date','ch','region','role','ctype','acc'].forEach(function(g){
-      var val=g==='ch'?r.channel:g==='acc'?r.acc:r[g];
-      document.querySelectorAll('[data-g="'+g+'"]').forEach(function(c){if(c.dataset.v===val)pick(c,g);});
+    if(r.photo){photoB64=r.photo;document.getElementById("cam-img").src=r.photo;document.getElementById("cam-idle").style.display="none";document.getElementById("cam-preview").style.display="block";}
+    ["date","ch","region","role","ctype","acc"].forEach(function(g){
+      var val=g==="ch"?r.channel:g==="acc"?r.acc:r[g];
+      document.querySelectorAll("[data-g=\""+g+"\"]").forEach(function(c){if(c.dataset.v===val)pick(c,g);});
     });
-    document.querySelectorAll('[data-g="intent"]').forEach(function(c){if(c.dataset.v===r.intent)pickIntent(c);});
-    if(r.prods)r.prods.split(', ').forEach(function(v){var b=document.querySelector('[data-g="prod"][data-v="'+v+'"]');if(b)multi(b,'prod');});
-    if(r.comps)r.comps.split(', ').forEach(function(v){var b=document.querySelector('[data-g="comp"][data-v="'+v+'"]');if(b)multi(b,'comp');});
+    document.querySelectorAll("[data-g=\"intent\"]").forEach(function(c){if(c.dataset.v===r.intent)pickIntent(c);});
+    if(r.prods)r.prods.split(", ").forEach(function(v){var b=document.querySelector("[data-g=\"prod\"][data-v=\""+v+"\"]");if(b)multi(b,"prod");});
+    if(r.comps)r.comps.split(", ").forEach(function(v){var b=document.querySelector("[data-g=\"comp\"][data-v=\""+v+"\"]");if(b)multi(b,"comp");});
   },80);
 }
 
-// ── STATS ──
-function renderStats() {
+// ── STATS / DASHBOARD ──
+function renderStats(){
   var n=recs.length;
-  var high=recs.filter(function(r){return r.intent==='High';}).length;
-  var low=recs.filter(function(r){return r.intent==='Low';}).length;
-  var nNew=recs.filter(function(r){return r.ctype==='新客户';}).length;
-  document.getElementById('sg').innerHTML=
-    '<div class="sc"><div class="scn">'+n+'</div><div class="scl">总记录数</div></div>'+
-    '<div class="sc"><div class="scn r">'+high+'</div><div class="scl">🔥 高意向</div></div>'+
-    '<div class="sc"><div class="scn b">'+low+'</div><div class="scl">❄️ 低意向</div></div>'+
-    '<div class="sc"><div class="scn">'+nNew+'</div><div class="scl" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div></div>';
-  var byDate=[['5月19日','May 19'],['5月20日','May 20'],['5月21日','May 21'],['5月22日','May 22']].map(function(d){return[d[0],recs.filter(function(r){return r.date===d[1];}).length];});
-  var byProd=['FFR','IVUS','PFA','MCs','Dual-MCs','Extension','Others'].map(function(p){return[p,recs.filter(function(r){return r.prods.indexOf(p)>-1;}).length];}).filter(function(x){return x[1]>0;});
-  var byRegion=[['一区',recs.filter(function(r){return r.region.indexOf('一区')>-1;}).length],['二区',recs.filter(function(r){return r.region.indexOf('二区')>-1;}).length]];
-  var byMember=['ALEX W','BELLONA','FARBO','ISSAC','JAMES','JASON','JOYCE','LYNETTY','OTHERS'].map(function(m){return[m,recs.filter(function(r){return r.recorder===m;}).length];}).filter(function(x){return x[1]>0;});
-  var byComp=['Philips','Boston Scientific','Abbott','Acist','Nipro','SonoScape','Pulse Medical'].map(function(c){return[c,recs.filter(function(r){return r.comps.indexOf(c)>-1;}).length];}).filter(function(x){return x[1]>0;});
-  function bc(title,data){
-    if(!data.length)return'';
-    var max=Math.max.apply(null,data.map(function(d){return d[1];}));if(!max)max=1;
-    return'<div class="chart-sec"><div class="chart-t">'+title+'</div>'+data.map(function(d){return'<div class="bar-row"><div class="bar-lbl">'+d[0]+'</div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(d[1]/max*100)+'%"></div></div><div class="bar-n">'+d[1]+'</div></div>';}).join('')+'</div>';
+  if(!n){
+    document.getElementById("sg").innerHTML="";
+    document.getElementById("charts").innerHTML="<div style=\"text-align:center;padding:60px 20px;font-family:IBM Plex Mono,monospace;font-size:13px;color:#6B5F50;letter-spacing:1px\">NO DATA YET</div>";
+    return;
   }
-  document.getElementById('charts').innerHTML=bc('按日期',byDate)+bc('按产品',byProd)+bc('按大区',byRegion)+bc('按团队成员',byMember)+bc('按竞品',byComp);
+  var high=recs.filter(function(r){return r.intent==="High";}).length;
+  var med=recs.filter(function(r){return r.intent==="Medium";}).length;
+  var low=recs.filter(function(r){return r.intent==="Low";}).length;
+  var nNew=recs.filter(function(r){return r.ctype==="New Customer";}).length;
+  var nActive=recs.filter(function(r){return r.channel==="Active Visit";}).length;
+  var nPotDist=recs.filter(function(r){return r.role==="Potential Distributor";}).length;
+  var nPFA=recs.filter(function(r){return r.prods.indexOf("PFA")>-1;}).length;
+  var ctrySet={};recs.forEach(function(r){if(r.country)ctrySet[r.country]=1;});
+  var nCountry=Object.keys(ctrySet).length;
+  var highRate=Math.round(high/n*100);
+
+  document.getElementById("sg").innerHTML=
+    mkKpi(n,"Total Contacts","#C9A227")+mkKpi(nNew,"New Customers","#C9A227")+
+    mkKpi(nActive,"Active Visits","#4A7FA8")+mkKpi(nCountry,"Countries Covered","#4A8A5A")+
+    mkKpi(nPotDist,"Potential Distributors","#C9A227")+mkKpi(nPFA,"Interested in PFA","#A89880");
+
+  var ctryMap={};recs.forEach(function(r){if(r.country)ctryMap[r.country]=(ctryMap[r.country]||0)+1;});
+  var byCountry=Object.keys(ctryMap).map(function(k){return[k,ctryMap[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  var byProd=["FFR","IVUS","PFA","MCs","Dual-MCs","Extension","Others"].map(function(p){var t=recs.filter(function(r){return r.prods.indexOf(p)>-1;}).length;var h=recs.filter(function(r){return r.prods.indexOf(p)>-1&&r.intent==="High";}).length;return{name:p,total:t,high:h};}).filter(function(x){return x.total>0;}).sort(function(a,b){return b.total-a.total;});
+  var byComp=["Philips","Boston Scientific","Abbott","Acist","Nipro","SonoScape","Pulse Medical"].map(function(c){return[c.replace("Boston Scientific","Boston Sci"),recs.filter(function(r){return r.comps.indexOf(c)>-1;}).length];}).filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];});
+  var byRole=[["HOD","HOD"],["Main Physician","Physician"],["Fellow","Fellow"],["Existing Distributor","Exist. Dist"],["Potential Distributor","Pot. Dist"]].map(function(r){return[r[1],recs.filter(function(x){return x.role===r[0];}).length];}).filter(function(x){return x[1]>0;});
+  var byDate=[["May 19","May 19"],["May 20","May 20"],["May 21","May 21"],["May 22","May 22"]].map(function(d){var dr=recs.filter(function(r){return r.date===d[1];});return{name:d[0],total:dr.length,high:dr.filter(function(r){return r.intent==="High";}).length};});
+  var dateMax=Math.max.apply(null,byDate.map(function(d){return d.total;}))||1;
+
+  var html="";
+  // Daily
+  html+="<div class=\"chart-sec\"><div class=\"chart-t\">📅  DAILY ACTIVITY</div>";
+  html+=byDate.map(function(d){var pct=Math.round(d.total/dateMax*100);var hpct=d.total?Math.round(d.high/d.total*100):0;return"<div style=\"margin-bottom:10px\"><div style=\"display:flex;justify-content:space-between;margin-bottom:4px\"><span style=\"font-family:IBM Plex Mono,monospace;font-size:11px;color:#A89880\">"+d.name+"</span><span style=\"font-family:IBM Plex Mono,monospace;font-size:11px;color:#555\">"+d.total+" contacts · <span style=\"color:#D4533A\">"+d.high+" high</span></span></div><div style=\"background:#181818;height:14px;position:relative;overflow:hidden\"><div style=\"width:"+pct+"%;height:100%;background:rgba(201,162,39,0.2)\"></div><div style=\"width:"+hpct+"%;height:100%;background:#D4533A;opacity:.8;position:absolute;top:0;left:0\"></div></div></div>";}).join("")+"</div>";
+  // Markets + Intent 2col
+  html+="<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px\">";
+  var cMax=byCountry.length?byCountry[0][1]:1;
+  html+="<div class=\"chart-sec\" style=\"margin-bottom:0\"><div class=\"chart-t\">🌍  TOP MARKETS</div>"+byCountry.map(function(d){return"<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:7px\"><div style=\"width:82px;font-size:11px;color:#A89880;text-align:right;flex-shrink:0;font-family:IBM Plex Mono,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\" title=\""+d[0]+"\">"+d[0]+"</div><div style=\"flex:1;background:#181818;height:10px;position:relative;overflow:hidden\"><div style=\"width:"+Math.round(d[1]/cMax*100)+"%;height:100%;background:#4A7FA8;opacity:.7;position:absolute;top:0;left:0\"></div></div><div style=\"width:28px;font-size:10px;color:#555;font-family:IBM Plex Mono,monospace;text-align:right\">"+d[1]+"</div></div>";}).join("")+"</div>";
+  html+="<div class=\"chart-sec\" style=\"margin-bottom:0\"><div class=\"chart-t\">🎯  INTENT QUALITY</div>"+[{lbl:"🔥 High",val:high,pct:Math.round(high/n*100),c:"#D4533A"},{lbl:"⚡ Medium",val:med,pct:Math.round(med/n*100),c:"#C9A227"},{lbl:"❄️ Low",val:low,pct:Math.round(low/n*100),c:"#4A7FA8"}].map(function(r){return"<div style=\"margin-bottom:10px\"><div style=\"display:flex;justify-content:space-between;margin-bottom:4px\"><span style=\"font-size:12px;color:#A89880\">"+r.lbl+"</span><span style=\"font-family:IBM Plex Mono,monospace;font-size:12px;color:"+r.c+"\">"+r.val+" · "+r.pct+"%</span></div><div style=\"background:#181818;height:10px\"><div style=\"width:"+r.pct+"%;height:100%;background:"+r.c+"\"></div></div></div>";}).join("")+"<div style=\"font-size:30px;font-weight:700;color:#D4533A;font-family:IBM Plex Mono,monospace;text-align:center;margin-top:12px;padding-top:10px;border-top:1px solid #2A2A2A\">"+highRate+"%</div><div style=\"font-size:10px;color:#555;text-align:center;letter-spacing:1px;font-family:IBM Plex Mono,monospace;margin-top:2px\">HIGH INTENT RATE</div></div>";
+  html+="</div>";
+  // Product
+  var pMax=byProd.length?byProd[0].total:1;
+  html+="<div class=\"chart-sec\"><div class=\"chart-t\">💊  PRODUCT INTEREST · <span style=\"color:#C9A227;opacity:.7\">gold=total</span> <span style=\"color:#D4533A\">red=high</span></div>"+byProd.map(function(d){var pct=Math.round(d.total/pMax*100);var hpct=d.total?Math.round(d.high/d.total*100):0;return"<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:8px\"><div style=\"width:65px;font-size:11px;color:#A89880;text-align:right;flex-shrink:0;font-family:IBM Plex Mono,monospace\">"+d.name+"</div><div style=\"flex:1;background:#181818;height:16px;position:relative;overflow:hidden\"><div style=\"width:"+pct+"%;height:100%;background:rgba(201,162,39,.2);border:1px solid rgba(201,162,39,.3)\"></div><div style=\"width:"+hpct+"%;height:100%;background:#D4533A;opacity:.7;position:absolute;top:0;left:0\"></div></div><div style=\"width:58px;font-size:10px;color:#555;font-family:IBM Plex Mono,monospace\">"+d.total+" · <span style=\"color:#D4533A\">"+d.high+"↑</span></div></div>";}).join("")+"</div>";
+  // Competitor + Role 2col
+  var cpMax=byComp.length?byComp[0][1]:1;
+  var rlMax=byRole.length?byRole[0][1]:1;
+  html+="<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px\">";
+  html+="<div class=\"chart-sec\" style=\"margin-bottom:0\"><div class=\"chart-t\">⚔️  COMPETITOR LANDSCAPE</div>"+(byComp.length?byComp.map(function(d){return"<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:7px\"><div style=\"width:82px;font-size:11px;color:#A89880;text-align:right;flex-shrink:0;font-family:IBM Plex Mono,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+d[0]+"</div><div style=\"flex:1;background:#181818;height:10px;position:relative;overflow:hidden\"><div style=\"width:"+Math.round(d[1]/cpMax*100)+"%;height:100%;background:#D4533A;opacity:.6;position:absolute;top:0;left:0\"></div></div><div style=\"width:28px;font-size:10px;color:#555;font-family:IBM Plex Mono,monospace;text-align:right\">"+d[1]+"</div></div>";}).join(""):"<div style=\"font-size:11px;color:#555\">No data</div>")+"</div>";
+  html+="<div class=\"chart-sec\" style=\"margin-bottom:0\"><div class=\"chart-t\">🏥  CONTACT TYPE MIX</div>"+(byRole.length?byRole.map(function(d){return"<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:7px\"><div style=\"width:82px;font-size:11px;color:#A89880;text-align:right;flex-shrink:0;font-family:IBM Plex Mono,monospace\">"+d[0]+"</div><div style=\"flex:1;background:#181818;height:10px;position:relative;overflow:hidden\"><div style=\"width:"+Math.round(d[1]/rlMax*100)+"%;height:100%;background:#C9A227;opacity:.6;position:absolute;top:0;left:0\"></div></div><div style=\"width:28px;font-size:10px;color:#555;font-family:IBM Plex Mono,monospace;text-align:right\">"+d[1]+"</div></div>";}).join(""):"<div style=\"font-size:11px;color:#555\">No data</div>")+"</div>";
+  html+="</div>";
+  document.getElementById("charts").innerHTML=html;
 }
+
+function mkKpi(val,lbl,color){return"<div class=\"sc\"><div class=\"scn\" style=\"color:"+color+"\">"+val+"</div><div class=\"scl\">"+lbl+"</div></div>";}
 
 // ── EXPORT ──
-function exportFull() {
-  if(!recs.length){alert('暂无记录');return;}
-  function ic(i){return i==='High'?'#D4533A':i==='Medium'?'#C9A227':'#4A7FA8';}
-  function il(i){return i==='High'?'高意向':i==='Medium'?'中意向':i==='Low'?'低意向':'—';}
-  function rgb(i){return i==='High'?'212,83,58':i==='Medium'?'201,162,39':'74,127,168';}
+function exportFull(){
+  if(!recs.length){alert("No records");return;}
+  function ic(i){return i==="High"?"#D4533A":i==="Medium"?"#C9A227":"#4A7FA8";}
+  function il(i){return i==="High"?"High":i==="Medium"?"Medium":i==="Low"?"Low":"—";}
+  function rgb(i){return i==="High"?"212,83,58":i==="Medium"?"201,162,39":"74,127,168";}
   var cards=recs.map(function(r){
-    return '<div style="font-family:sans-serif;background:#111;border:1px solid #2A2A2A;border-left:4px solid '+ic(r.intent)+';margin-bottom:18px;padding:16px">'+
-      (r.photo?'<img src="'+r.photo+'" style="width:100%;max-height:180px;object-fit:contain;border:1px solid #444;background:#000;margin-bottom:12px;display:block">':'')+
-      '<div style="display:flex;justify-content:space-between;margin-bottom:8px">'+
-      '<div><div style="font-size:16px;font-weight:700;color:#F0EDE8">'+(r.name||'<em style="color:#555">未填写姓名</em>')+'</div>'+
-      '<div style="font-size:13px;color:#A89880">'+(r.inst||'<em style="color:#555">未填写机构</em>')+'</div></div>'+
-      '<div style="padding:3px 10px;background:rgba('+rgb(r.intent)+',0.2);color:'+ic(r.intent)+';font-size:12px;font-weight:600">'+il(r.intent)+'</div></div>'+
-      '<div style="font-size:12px;color:#666;margin-bottom:6px">'+(r.prods||'')+(r.comps?' | 竞品：'+r.comps:'')+'</div>'+
-      '<div style="font-size:11px;color:#555">📍 '+(r.country||'')+'  '+( r.role||'')+'  '+(r.ctype||'')+'</div>'+
-      (r.notes?'<div style="font-size:13px;color:#A89880;padding:8px;background:#0D0D0D;border-left:2px solid #333;margin-top:8px;line-height:1.5">'+r.notes+'</div>':'')+
-      (r.market?'<div style="font-size:13px;color:#4A7FA8;padding:8px;background:#0D0D0D;border-left:2px solid #4A7FA8;margin-top:6px;line-height:1.5">🌏 '+r.market+'</div>':'')+
-      '<div style="font-size:11px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #222">'+( r.date||'')+' · '+(r.recorder||'')+' · '+(r.region||'')+'</div></div>';
-  }).join('');
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EuroPCR 2026 访客报告</title>'+
-    '<style>body{background:#0A0A0A;color:#F0EDE8;padding:24px;max-width:900px;margin:0 auto;font-family:sans-serif}h1{color:#C9A227;font-size:20px;font-weight:700;margin-bottom:4px}.meta{font-size:12px;color:#555;margin-bottom:20px}</style></head><body>'+
-    '<h1>EuroPCR 2026 · 访客完整报告</h1>'+
-    '<div class="meta">生成时间：'+new Date().toLocaleString('zh-CN')+' · 共 '+recs.length+' 条 · '+recs.filter(function(r){return r.photo;}).length+' 张名片</div>'+
-    cards+'</body></html>';
-  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='EuroPCR2026_完整报告_'+new Date().toISOString().slice(0,10)+'.html'; a.click();
-  toast('✓ 完整报告已导出');
+    var o="<div style=\"font-family:sans-serif;background:#111;border:1px solid #2A2A2A;border-left:4px solid "+ic(r.intent)+";margin-bottom:18px;padding:16px\">";
+    if(r.photo)o+="<img src=\""+r.photo+"\" style=\"width:100%;max-height:180px;object-fit:contain;border:1px solid #444;background:#000;margin-bottom:12px;display:block\">";
+    o+="<div style=\"display:flex;justify-content:space-between;margin-bottom:8px\"><div><div style=\"font-size:16px;font-weight:700;color:#F0EDE8\">"+(r.name||"No name")+"</div><div style=\"font-size:13px;color:#A89880\">"+(r.inst||"")+"</div></div><div style=\"padding:3px 10px;background:rgba("+rgb(r.intent)+",0.2);color:"+ic(r.intent)+";font-size:12px;font-weight:600\">"+il(r.intent)+"</div></div>";
+    o+="<div style=\"font-size:12px;color:#666;margin-bottom:6px\">"+(r.prods||"")+(r.comps?" | Comp: "+r.comps:"")+"</div>";
+    o+="<div style=\"font-size:11px;color:#555\">📍 "+(r.country||"")+" "+(r.role||"")+" "+(r.ctype||"")+"</div>";
+    if(r.notes)o+="<div style=\"font-size:13px;color:#A89880;padding:8px;background:#0D0D0D;border-left:2px solid #333;margin-top:8px;line-height:1.5\">"+r.notes+"</div>";
+    if(r.market)o+="<div style=\"font-size:13px;color:#4A7FA8;padding:8px;background:#0D0D0D;border-left:2px solid #4A7FA8;margin-top:6px;line-height:1.5\">Market: "+r.market+"</div>";
+    o+="<div style=\"font-size:11px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #222\">"+(r.date||"")+" · "+(r.recorder||"")+"</div></div>";
+    return o;
+  }).join("");
+  var html="<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>EuroPCR 2026 Report</title><style>body{background:#0A0A0A;color:#F0EDE8;padding:24px;max-width:900px;margin:0 auto;font-family:sans-serif}h1{color:#C9A227;font-size:20px;font-weight:700}.meta{font-size:12px;color:#555;margin-bottom:20px}</style></head><body><h1>EuroPCR 2026 · Visitor Report</h1><div class=\"meta\">"+new Date().toLocaleString()+" · "+recs.length+" records</div>"+cards+"</body></html>";
+  var blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="EuroPCR2026_Report_"+new Date().toISOString().slice(0,10)+".html";a.click();toast("Export complete");
+}
+function exportCSV(){
+  if(!recs.length){alert("No records");return;}
+  var hdr=["ID","Recorder","Date","Channel","Region","Country","Name","Institution","Role","Customer Type","Accompanying","Products","Competitors","Intent","Notes","Market","Has Photo","Timestamp"];
+  var rows=recs.map(function(r){return[r.id,r.recorder,r.date,r.channel||"",r.region,r.country,r.name||"",r.inst||"",r.role||"",r.ctype||"",r.acc||"—",r.prods,r.comps||"",r.intent||"",r.notes||"",r.market||"",r.photo?"Yes":"No",r.ts];});
+  var nl=String.fromCharCode(10),bom=String.fromCharCode(0xFEFF);
+  var csv=[hdr].concat(rows).map(function(row){return row.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(",");}).join(nl);
+  var blob=new Blob([bom+csv],{type:"text/csv;charset=utf-8"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="EuroPCR2026_"+new Date().toISOString().slice(0,10)+".csv";a.click();toast("CSV exported");
 }
 
-function exportCSV() {
-  if(!recs.length){alert('暂无记录');return;}
-  var hdr=['ID','记录人','日期','拜访方式','大区','国家','姓名','机构','职位','客户类型','随行人数','感兴趣产品','竞品','意向','沟通备注','市场动态','有名片照片','时间戳'];
-  var rows=recs.map(function(r){return[r.id,r.recorder,r.date,r.channel,r.region,r.country,r.name||'',r.inst||'',r.role,r.ctype||'',r.acc||'—',r.prods,r.comps||'',r.intent||'',r.notes||'',r.market||'',r.photo?'是':'否',r.ts];});
-  var csv=[hdr].concat(rows).map(function(row){return row.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
-  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='EuroPCR2026_访客数据_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
-  toast('✓ CSV 已导出');
-}
-
-// ── STRIP & TOAST ──
-function updateStrip() {
+// ── STRIP ──
+function updateStrip(){
   var n=recs.length;
-  document.getElementById('n-total').textContent=n;
-  document.getElementById('s-total').textContent=n;
-  document.getElementById('s-high').textContent=recs.filter(function(r){return r.intent==='High';}).length;
-  document.getElementById('s-med').textContent=recs.filter(function(r){return r.intent==='Medium';}).length;
-  document.getElementById('s-low').textContent=recs.filter(function(r){return r.intent==='Low';}).length;
-  document.getElementById('s-new').textContent=recs.filter(function(r){return r.ctype==='新客户';}).length;
-  document.getElementById('s-active').textContent=recs.filter(function(r){return r.channel==='主动拜访';}).length;
-}
-function toast(msg) {
-  var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on');
-  setTimeout(function(){t.classList.remove('on');},2400);
+  document.getElementById("n-total").textContent=n;
+  document.getElementById("s-total").textContent=n;
+  document.getElementById("s-high").textContent=recs.filter(function(r){return r.intent==="High";}).length;
+  document.getElementById("s-med").textContent=recs.filter(function(r){return r.intent==="Medium";}).length;
+  document.getElementById("s-low").textContent=recs.filter(function(r){return r.intent==="Low";}).length;
+  document.getElementById("s-new").textContent=recs.filter(function(r){return r.ctype==="New Customer";}).length;
+  document.getElementById("s-active").textContent=recs.filter(function(r){return r.channel==="Active Visit";}).length;
 }
 
-updateStrip();
-loadFromCloud();
+// ── TOAST ──
+function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");setTimeout(function(){t.classList.remove("on");},2400);}
 
-// ── LANGUAGE TOGGLE ──
-var currentLang = localStorage.getItem('lang') || 'en';
+// ── AUTH ──
+function enterStaff(){
+  document.getElementById("tab-records").style.display="none";
+  document.getElementById("tab-stats").style.display="none";
+  document.querySelector(".strip").style.display="none";
+  document.getElementById("sync-bar").style.display="none";
+  goTab("form");
+  setTimeout(function(){applyLang("en");},50);
+}
+function enterBoss(){
+  document.getElementById("tab-records").style.display="";
+  document.getElementById("tab-stats").style.display="";
+  document.querySelector(".strip").style.display="";
+  document.getElementById("sync-bar").style.display="";
+  localStorage.setItem("lang","en");currentLang="en";
+  updateStrip();loadFromCloud();
+  goTab("stats");
+  setTimeout(function(){applyLang("en");},80);
+}
+function doLogin(){
+  var v=document.getElementById("login-pwd").value.trim();
+  if(v==="bcd"||v==="abc"){
+    sessionStorage.setItem("auth","boss");
+    document.getElementById("login-wrap").style.display="none";
+    document.getElementById("login-cancel-wrap").style.display="none";
+    enterBoss();
+  }else{
+    var err=document.getElementById("login-err");
+    err.textContent="Incorrect password";
+    document.getElementById("login-pwd").value="";
+    document.getElementById("login-pwd").focus();
+    setTimeout(function(){err.textContent="";},2000);
+  }
+}
+function doLogout(){
+  sessionStorage.removeItem("auth");
+  document.getElementById("login-wrap").style.display="flex";
+  document.getElementById("login-cancel-wrap").style.display="block";
+  document.getElementById("login-pwd").value="";
+  document.getElementById("login-err").textContent="";
+  enterStaff();
+}
+function cancelLogin(){
+  document.getElementById("login-wrap").style.display="none";
+  document.getElementById("login-cancel-wrap").style.display="none";
+  document.getElementById("login-pwd").value="";
+  document.getElementById("login-err").textContent="";
+}
+
+// ── LANGUAGE ──
+var currentLang=localStorage.getItem("lang")||"en";
+
+var LANG = {
+  en: {
+    secT: ["Recorded By","Visit Info","Region & Country","Customer Info","Products & Competitors","Intent Level *","Notes"],
+    flabel: ["Date *","Channel *","Region *","Country / Territory *","Business Card Photo","Full Name","Institution","Accompanying","Position / Role *","Customer Type *","Interested Products * (multi)","Current Competitors (multi)","Discussion Notes","Market Intelligence"],
+    chips: {
+      "Active Visit":"Active Visit","Passive Visit":"Passive Visit",
+      "Region1":"Region 1","Region2":"Region 2",
+      "Main Physician":"Main Physician","Existing Distributor":"Existing Distributor","Potential Distributor":"Potential Distributor",
+      "Existing (Not Installed)":"Existing (Not Installed)","Existing (Installed)":"Existing (Installed)","New Customer":"New Customer",
+      "No Competitor":"No Competitor",
+      "High":"🔥 High","Medium":"⚡ Medium","Low":"❄️ Low"
+    },
+    camLbl:"CAMERA", camHint:"Take photo or upload from album",
+    camShoot:"⬤ CAPTURE", camCancel:"Cancel", camRetake:"↩ Retake", camRemove:"✕ Remove", camOk:"✓ Photo saved",
+    save:"SAVE RECORD", selMember:"— Select member —",
+    ph:["Search country…","First Last","Hospital / Company","Key points, follow-up…","Market trends…"],
+    filter:["All Dates","All Intent","All Products","All Regions"],
+    strip:["Total","High Intent","Medium","Low Intent","New Customer","Active Visit"],
+    tabs:["＋ New","Records","Stats"]
+  },
+  zh: {
+    secT: ["记录人","拜访信息","大区 & 国家","客户信息","感兴趣产品 & 竞品","意向程度 *","备注"],
+    flabel: ["日期 *","拜访方式 *","大区 *","国家 / 地区 *","名片拍照","姓名","机构名称","随行人数","职位 / 角色 *","客户类型 *","感兴趣产品（多选）","现有竞品（多选）","沟通备注","国家市场动态"],
+    chips: {
+      "Active Visit":"主动拜访","Passive Visit":"被动来访",
+      "Region1":"国际一区","Region2":"国际二区",
+      "Main Physician":"主要术者","Existing Distributor":"现有代理商","Potential Distributor":"潜在代理商",
+      "Existing (Not Installed)":"现有客户（未入院）","Existing (Installed)":"现有客户（已入院）","New Customer":"新客户",
+      "No Competitor":"无竞品",
+      "High":"🔥 高","Medium":"⚡ 中","Low":"❄️ 低"
+    },
+    camLbl:"打开摄像头", camHint:"拍摄名片或从相册选择",
+    camShoot:"⬤ 拍摄", camCancel:"取消", camRetake:"↩ 重拍", camRemove:"✕ 删除", camOk:"✓ 名片已保存",
+    save:"保　存", selMember:"— 选择团队成员 —",
+    ph:["搜索国家…","请输入姓名","医院 / 公司名称","关键沟通内容…","市场动态…"],
+    filter:["全部日期","全部意向","全部产品","全部大区"],
+    strip:["总记录","高意向","中意向","低意向","新客户","主动拜访"],
+    tabs:["＋ 新增","记录列表","统计导出"]
+  }
+};
 
 function applyLang(lang) {
   currentLang = lang;
-  localStorage.setItem('lang', lang);
-  var btn = document.getElementById('lang-btn');
-  btn.textContent = lang === 'zh' ? 'EN' : '中文';
+  localStorage.setItem("lang", lang);
+  var L = LANG[lang] || LANG.en;
 
-  // Text nodes with data-zh/data-en
-  document.querySelectorAll('[data-zh]').forEach(function(el) {
-    el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+  // Lang button
+  var btn = document.getElementById("lang-btn");
+  if (btn) btn.textContent = lang === "zh" ? "EN" : "中文";
+
+  // Strip labels
+  var sls = document.querySelectorAll(".sl");
+  sls.forEach(function(el,i){ if(L.strip[i]) el.textContent = L.strip[i]; });
+
+  // Tab labels
+  var txts = document.querySelectorAll(".t-txt");
+  txts.forEach(function(el,i){ if(L.tabs[i]) el.textContent = L.tabs[i]; });
+
+  // Section titles
+  var secs = document.querySelectorAll(".sec-t");
+  secs.forEach(function(el,i){ if(L.secT[i]) el.textContent = L.secT[i]; });
+
+  // Field labels
+  var lbls = document.querySelectorAll(".flabel");
+  lbls.forEach(function(el,i){ if(L.flabel[i]) el.textContent = L.flabel[i]; });
+
+  // Chips with c-txt (channel, region, role, ctype, intent, comp)
+  Object.keys(L.chips).forEach(function(v) {
+    var el = document.querySelector("[data-v=\""+v+"\"] .c-txt");
+    if (el) el.textContent = L.chips[v];
   });
 
-  // Spans inside chips/buttons
-  document.querySelectorAll('[data-zh] .c-txt, [data-zh] .t-txt').forEach(function(el) {
-    var parent = el.closest('[data-zh]');
-    if (parent) el.textContent = lang === 'zh' ? parent.getAttribute('data-zh') : parent.getAttribute('data-en');
-  });
+  // Camera
+  var camlbl = document.querySelector(".cam-lbl"); if(camlbl) camlbl.textContent = L.camLbl;
+  var camhint = document.querySelector(".cam-hint"); if(camhint) camhint.textContent = L.camHint;
+  var shootTxt = document.querySelector(".cam-shoot .c-txt"); if(shootTxt) shootTxt.textContent = L.camShoot;
+  var cancelTxt = document.querySelector(".cam-cancel .c-txt"); if(cancelTxt) cancelTxt.textContent = L.camCancel;
+  var retakeTxt = document.querySelector(".cam-retake .c-txt"); if(retakeTxt) retakeTxt.textContent = L.camRetake;
+  var clearTxt = document.querySelector(".cam-clear .c-txt"); if(clearTxt) clearTxt.textContent = L.camRemove;
+  var camok = document.querySelector(".cam-ok"); if(camok) camok.textContent = L.camOk;
+
+  // Save button
+  var saveTxt = document.querySelector(".save-btn .c-txt"); if(saveTxt) saveTxt.textContent = L.save;
+
+  // Select member placeholder
+  var memOpt = document.querySelector("#f-rec option[value='']"); if(memOpt) memOpt.textContent = L.selMember;
 
   // Placeholders
-  document.querySelectorAll('[data-zh-ph]').forEach(function(el) {
-    el.placeholder = lang === 'zh' ? el.getAttribute('data-zh-ph') : el.getAttribute('data-en-ph');
-  });
+  var els = [
+    {id:"cs-input", ph:L.ph[0]},
+    {id:"f-name",   ph:L.ph[1]},
+    {id:"f-inst",   ph:L.ph[2]},
+    {id:"f-notes",  ph:L.ph[3]},
+    {id:"f-market", ph:L.ph[4]}
+  ];
+  els.forEach(function(x){ var el=document.getElementById(x.id); if(el) el.placeholder=x.ph; });
 
-  // Select options
-  document.querySelectorAll('option[data-zh]').forEach(function(el) {
-    el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-  });
+  // Filter selects
+  var fdate = document.querySelector("#view-records .filters select:nth-child(1) option[value='']");
+  var fint  = document.querySelector("#fi option[value='']");
+  var fprod = document.querySelector("#fp option[value='']");
+  var freg  = document.querySelector("#fr option[value='']");
+  if(fdate) fdate.textContent = L.filter[0];
+  if(fint)  fint.textContent  = L.filter[1];
+  if(fprod) fprod.textContent = L.filter[2];
+  if(freg)  freg.textContent  = L.filter[3];
+}
 
-  // Sync bar default text
-  var syncTxt = document.getElementById('sync-txt');
-  if (syncTxt && syncTxt.getAttribute('data-zh')) {
-    syncTxt.textContent = lang === 'zh' ? syncTxt.getAttribute('data-zh') : syncTxt.getAttribute('data-en');
+function toggleLang(){ applyLang(currentLang==="zh"?"en":"zh"); }
+
+// ── INIT ──
+function init(){
+  var auth=sessionStorage.getItem("auth");
+  if(auth==="boss"){
+    enterBoss();
+  } else {
+    enterStaff();
+    applyLang("en");
   }
 }
-
-function toggleLang() {
-  applyLang(currentLang === 'zh' ? 'en' : 'zh');
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init);
+} else {
+  setTimeout(init,0);
 }
-
-// Apply on load
-applyLang(currentLang);
-
 </script>
 </body>
 </html>
