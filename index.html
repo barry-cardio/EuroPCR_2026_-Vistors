@@ -163,45 +163,46 @@ textarea{resize:none;height:80px;line-height:1.5}
 <div class="nav">
   <div class="nav-badge">IL</div>
   <div>
-    <div class="nav-title">EuroPCR 2026 · 访客记录</div>
-    <div class="nav-sub">巴黎 · 5月19-22日</div>
+    <div class="nav-title" data-zh="EuroPCR 2026 · 访客记录" data-en="EuroPCR 2026 · Visitor Log">EuroPCR 2026 · 访客记录</div>
+    <div class="nav-sub" data-zh="巴黎 · 5月19-22日" data-en="Paris · May 19-22">巴黎 · 5月19-22日</div>
   </div>
   <div style="flex:1"></div>
-  <div class="nav-count">总计 <span id="n-total">0</span></div>
+  <div class="nav-count"><span data-zh="总计" data-en="Total">总计</span> <span id="n-total">0</span></div>
+  <div id="lang-btn" onclick="toggleLang()" style="margin-left:10px;padding:4px 10px;border:1px solid var(--gold);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:1px">EN</div>
 </div>
 
 <div class="strip">
-  <div><div class="sn" id="s-total">0</div><div class="sl">总记录</div></div>
-  <div><div class="sn" id="s-high" style="color:var(--red)">0</div><div class="sl">高意向</div></div>
-  <div><div class="sn" id="s-med">0</div><div class="sl">中意向</div></div>
-  <div><div class="sn" id="s-low" style="color:var(--blue)">0</div><div class="sl">低意向</div></div>
-  <div><div class="sn" id="s-new">0</div><div class="sl">新客户</div></div>
-  <div><div class="sn" id="s-active">0</div><div class="sl">主动拜访</div></div>
+  <div><div class="sn" id="s-total">0</div><div class="sl" data-zh="总记录" data-en="Total">总记录</div></div>
+  <div><div class="sn" id="s-high" style="color:var(--red)">0</div><div class="sl" data-zh="高意向" data-en="High Intent">高意向</div></div>
+  <div><div class="sn" id="s-med">0</div><div class="sl" data-zh="中意向" data-en="Medium">中意向</div></div>
+  <div><div class="sn" id="s-low" style="color:var(--blue)">0</div><div class="sl" data-zh="低意向" data-en="Low Intent">低意向</div></div>
+  <div><div class="sn" id="s-new">0</div><div class="sl" data-zh="新客户" data-en="New Customer" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div></div>
+  <div><div class="sn" id="s-active">0</div><div class="sl" data-zh="主动拜访" data-en="Active Visit">主动拜访</div></div>
 </div>
 
 <div class="tabs">
-  <div class="tab on" id="tab-form" onclick="goTab('form')">＋ 新增</div>
-  <div class="tab" id="tab-records" onclick="goTab('records')">记录列表</div>
-  <div class="tab" id="tab-stats" onclick="goTab('stats')">统计导出</div>
+  <div class="tab on" id="tab-form" onclick="goTab('form')" data-zh="＋ 新增" data-en="＋ New"><span class="t-txt">＋ 新增</span></div>
+  <div class="tab" id="tab-records" onclick="goTab('records')" data-zh="记录列表" data-en="Records"><span class="t-txt">记录列表</span></div>
+  <div class="tab" id="tab-stats" onclick="goTab('stats')" data-zh="统计导出" data-en="Stats"><span class="t-txt">统计导出</span></div>
 </div>
 
 <!-- ═══ FORM ═══ -->
 <div class="view on" id="view-form">
 
   <div class="sec">
-    <div class="sec-t">记录人</div>
+    <div class="sec-t" data-zh="记录人" data-en="Recorded By">记录人</div>
     <select id="f-rec">
-      <option value="">— 选择团队成员 —</option>
-      <option>BELLONA</option><option>FABO</option><option>ISSAC</option>
+      <option value="" data-zh="— 选择团队成员 —" data-en="— Select member —">— 选择团队成员 —</option>
+      <option>ALEX W</option><option>BELLONA</option><option>FARBO</option><option>ISSAC</option>
       <option>JAMES</option><option>JASON</option><option>JOYCE</option>
       <option>LYNETTY</option><option>OTHERS</option>
     </select>
   </div>
 
   <div class="sec">
-    <div class="sec-t">拜访信息</div>
+    <div class="sec-t" data-zh="拜访信息" data-en="Visit Info">拜访信息</div>
     <div class="frow">
-      <div class="flabel">日期 *</div>
+      <div class="flabel" data-zh="日期 *" data-en="Date *">日期 *</div>
       <div class="chips">
         <div class="chip" data-g="date" data-v="May 19" onclick="pick(this,'date')">5月19日</div>
         <div class="chip" data-g="date" data-v="May 20" onclick="pick(this,'date')">5月20日</div>
@@ -210,25 +211,25 @@ textarea{resize:none;height:80px;line-height:1.5}
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">拜访方式 *</div>
+      <div class="flabel" data-zh="拜访方式 *" data-en="Channel *">拜访方式 *</div>
       <div class="chips">
-        <div class="chip" data-g="ch" data-v="主动拜访" onclick="pick(this,'ch')">🚶 主动拜访</div>
-        <div class="chip" data-g="ch" data-v="被动来访" onclick="pick(this,'ch')">🧲 被动来访</div>
+        <div class="chip" data-g="ch" data-v="主动拜访" onclick="pick(this,'ch')" data-zh="🚶 主动拜访" data-en="🚶 Active Visit"><span class="c-txt">🚶 主动拜访</span></div>
+        <div class="chip" data-g="ch" data-v="被动来访" onclick="pick(this,'ch')" data-zh="🧲 被动来访" data-en="🧲 Passive Visit"><span class="c-txt">🧲 被动来访</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t">大区 & 国家</div>
+    <div class="sec-t" data-zh="大区 & 国家" data-en="Region & Country">大区 & 国家</div>
     <div class="frow">
-      <div class="flabel">大区 *</div>
+      <div class="flabel" data-zh="大区 *" data-en="Region *">大区 *</div>
       <div class="chips">
-        <div class="chip" data-g="region" data-v="一区（欧洲/独联体）" onclick="pick(this,'region')">一区 · 欧洲 / 独联体</div>
-        <div class="chip" data-g="region" data-v="二区（中东/亚太/拉美/非洲）" onclick="pick(this,'region')">二区 · 中东 / 亚太 / 拉美 / 非洲</div>
+        <div class="chip" data-g="region" data-v="一区（欧洲/独联体）" onclick="pick(this,'region')" data-zh="一区 · 欧洲 / 独联体" data-en="Region 1 · Europe / CIS"><span class="c-txt">一区 · 欧洲 / 独联体</span></div>
+        <div class="chip" data-g="region" data-v="二区（中东/亚太/拉美/非洲）" onclick="pick(this,'region')" data-zh="二区 · 中东 / 亚太 / 拉美 / 非洲" data-en="Region 2 · ME / APAC / LatAm / Africa"><span class="c-txt">二区 · 中东 / 亚太 / 拉美 / 非洲</span></div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">国家 / 地区 *</div>
+      <div class="flabel" data-zh="国家 / 地区 *" data-en="Country / Territory *">国家 / 地区 *</div>
       <div class="cs-wrap">
         <input class="cs-inp" type="text" id="cs-input" placeholder="搜索国家…" autocomplete="off"
           oninput="csFilter(this.value)" onfocus="csOpen()" onblur="setTimeout(csClose,200)">
@@ -239,43 +240,43 @@ textarea{resize:none;height:80px;line-height:1.5}
   </div>
 
   <div class="sec">
-    <div class="sec-t">客户信息</div>
+    <div class="sec-t" data-zh="客户信息" data-en="Customer Info">客户信息</div>
     <div class="frow">
-      <div class="flabel">名片拍照</div>
+      <div class="flabel" data-zh="名片拍照" data-en="Business Card Photo">名片拍照</div>
       <div id="cam-idle">
         <button class="cam-btn" onclick="camStart()">
           <span class="cam-icon">📷</span>
-          <span class="cam-lbl">打开摄像头</span>
+          <span class="cam-lbl" data-zh="打开摄像头" data-en="OPEN CAMERA">打开摄像头</span>
         </button>
-        <div class="cam-hint">对准名片后拍摄保存</div>
+        <div class="cam-hint" data-zh="对准名片后拍摄保存" data-en="Point at card and capture">对准名片后拍摄保存</div>
       </div>
       <div class="cam-live" id="cam-live">
         <video id="cam-video" autoplay playsinline muted></video>
         <canvas id="cam-canvas" style="display:none"></canvas>
         <div class="cam-controls">
-          <button class="cam-shoot" onclick="camShoot()">⬤ &nbsp;拍摄</button>
-          <button class="cam-cancel" onclick="camStop()">取消</button>
+          <button class="cam-shoot" onclick="camShoot()" data-zh="⬤ 拍摄" data-en="⬤ CAPTURE"><span class="c-txt">⬤ &nbsp;拍摄</span></button>
+          <button class="cam-cancel" onclick="camStop()" data-zh="取消" data-en="Cancel"><span class="c-txt">取消</span></button>
         </div>
       </div>
       <div class="cam-preview" id="cam-preview">
         <img id="cam-img" src="">
         <div class="cam-preview-bar">
-          <button class="cam-retake" onclick="camRetake()">↩ 重拍</button>
-          <button class="cam-clear" onclick="camClear()">✕ 删除</button>
+          <button class="cam-retake" onclick="camRetake()" data-zh="↩ 重拍" data-en="↩ Retake"><span class="c-txt">↩ 重拍</span></button>
+          <button class="cam-clear" onclick="camClear()" data-zh="✕ 删除" data-en="✕ Remove"><span class="c-txt">✕ 删除</span></button>
         </div>
-        <div class="cam-ok">✓ 名片已保存</div>
+        <div class="cam-ok" data-zh="✓ 名片已保存" data-en="✓ Photo saved">✓ 名片已保存</div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">姓名</div>
-      <input type="text" id="f-name" placeholder="请输入姓名">
+      <div class="flabel" data-zh="姓名" data-en="Full Name">姓名</div>
+      <input type="text" id="f-name" placeholder="请输入姓名" data-zh-ph="请输入姓名" data-en-ph="First Last">
     </div>
     <div class="frow">
-      <div class="flabel">机构名称</div>
-      <input type="text" id="f-inst" placeholder="医院 / 公司名称">
+      <div class="flabel" data-zh="机构名称" data-en="Institution">机构名称</div>
+      <input type="text" id="f-inst" placeholder="医院 / 公司名称" data-zh-ph="医院 / 公司名称" data-en-ph="Hospital / Company">
     </div>
     <div class="frow">
-      <div class="flabel">随行人数</div>
+      <div class="flabel" data-zh="随行人数" data-en="Accompanying">随行人数</div>
       <div class="chips">
         <div class="chip" data-g="acc" data-v="1" onclick="pick(this,'acc')">1</div>
         <div class="chip" data-g="acc" data-v="2" onclick="pick(this,'acc')">2</div>
@@ -290,29 +291,29 @@ textarea{resize:none;height:80px;line-height:1.5}
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">职位 / 角色 *</div>
+      <div class="flabel" data-zh="职位 / 角色 *" data-en="Position / Role *">职位 / 角色 *</div>
       <div class="chips">
         <div class="chip" data-g="role" data-v="HOD" onclick="pick(this,'role')">HOD</div>
-        <div class="chip" data-g="role" data-v="主要术者" onclick="pick(this,'role')">主要术者</div>
+        <div class="chip" data-g="role" data-v="主要术者" onclick="pick(this,'role')" data-zh="主要术者" data-en="Main Physician"><span class="c-txt">主要术者</span></div>
         <div class="chip" data-g="role" data-v="Fellow" onclick="pick(this,'role')">Fellow</div>
-        <div class="chip" data-g="role" data-v="现有代理商" onclick="pick(this,'role')">现有代理商</div>
-        <div class="chip" data-g="role" data-v="潜在代理商" onclick="pick(this,'role')">潜在代理商</div>
+        <div class="chip" data-g="role" data-v="现有代理商" onclick="pick(this,'role')" data-zh="现有代理商" data-en="Existing Distributor"><span class="c-txt">现有代理商</span></div>
+        <div class="chip" data-g="role" data-v="潜在代理商" onclick="pick(this,'role')" data-zh="潜在代理商" data-en="Potential Distributor"><span class="c-txt">潜在代理商</span></div>
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">客户类型 *</div>
+      <div class="flabel" data-zh="客户类型 *" data-en="Customer Type *">客户类型 *</div>
       <div class="chips" style="flex-direction:column">
-        <div class="chip" data-g="ctype" data-v="现有客户（未入院）" onclick="pick(this,'ctype')">现有客户（未入院）</div>
-        <div class="chip" data-g="ctype" data-v="现有客户（已入院）" onclick="pick(this,'ctype')">现有客户（已入院）</div>
-        <div class="chip" data-g="ctype" data-v="新客户" onclick="pick(this,'ctype')">新客户</div>
+        <div class="chip" data-g="ctype" data-v="现有客户（未入院）" onclick="pick(this,'ctype')" data-zh="现有客户（未入院）" data-en="Existing (Not Installed)"><span class="c-txt">现有客户（未入院）</span></div>
+        <div class="chip" data-g="ctype" data-v="现有客户（已入院）" onclick="pick(this,'ctype')" data-zh="现有客户（已入院）" data-en="Existing (Installed)"><span class="c-txt">现有客户（已入院）</span></div>
+        <div class="chip" data-g="ctype" data-v="新客户" onclick="pick(this,'ctype')" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t">感兴趣产品 & 竞品</div>
+    <div class="sec-t" data-zh="感兴趣产品 & 竞品" data-en="Products & Competitors">感兴趣产品 & 竞品</div>
     <div class="frow">
-      <div class="flabel">感兴趣产品 *（可多选）</div>
+      <div class="flabel" data-zh="感兴趣产品 *（可多选）" data-en="Interested Products * (multi)">感兴趣产品 *（可多选）</div>
       <div class="chips">
         <div class="chip" data-g="prod" data-v="FFR" onclick="multi(this,'prod')">FFR</div>
         <div class="chip" data-g="prod" data-v="IVUS" onclick="multi(this,'prod')">IVUS</div>
@@ -324,7 +325,7 @@ textarea{resize:none;height:80px;line-height:1.5}
       </div>
     </div>
     <div class="frow">
-      <div class="flabel">现有竞品（可多选）</div>
+      <div class="flabel" data-zh="现有竞品（可多选）" data-en="Current Competitors (multi)">现有竞品（可多选）</div>
       <div class="chips">
         <div class="chip" data-g="comp" data-v="Philips" onclick="multi(this,'comp')">Philips</div>
         <div class="chip" data-g="comp" data-v="Boston Scientific" onclick="multi(this,'comp')">Boston Sci</div>
@@ -334,34 +335,34 @@ textarea{resize:none;height:80px;line-height:1.5}
         <div class="chip" data-g="comp" data-v="SonoScape" onclick="multi(this,'comp')">SonoScape</div>
         <div class="chip" data-g="comp" data-v="Pulse Medical" onclick="multi(this,'comp')">Pulse Medical</div>
         <div class="chip" data-g="comp" data-v="Others" onclick="multi(this,'comp')">Others</div>
-        <div class="chip" data-g="comp" data-v="无竞品" onclick="multi(this,'comp')">无竞品</div>
+        <div class="chip" data-g="comp" data-v="无竞品" onclick="multi(this,'comp')" data-zh="无竞品" data-en="No Competitor"><span class="c-txt">无竞品</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t">意向程度 *</div>
+    <div class="sec-t" data-zh="意向程度 *" data-en="Intent Level *">意向程度 *</div>
     <div class="chips">
-      <div class="chip" data-g="intent" data-v="High" onclick="pickIntent(this)">🔥 高</div>
-      <div class="chip" data-g="intent" data-v="Medium" onclick="pickIntent(this)">⚡ 中</div>
-      <div class="chip" data-g="intent" data-v="Low" onclick="pickIntent(this)">❄️ 低</div>
+      <div class="chip" data-g="intent" data-v="High" onclick="pickIntent(this)" data-zh="🔥 高" data-en="🔥 High"><span class="c-txt">🔥 高</span></div>
+      <div class="chip" data-g="intent" data-v="Medium" onclick="pickIntent(this)" data-zh="⚡ 中" data-en="⚡ Medium"><span class="c-txt">⚡ 中</span></div>
+      <div class="chip" data-g="intent" data-v="Low" onclick="pickIntent(this)" data-zh="❄️ 低" data-en="❄️ Low"><span class="c-txt">❄️ 低</span></div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-t">备注</div>
+    <div class="sec-t" data-zh="备注" data-en="Notes">备注</div>
     <div class="frow">
-      <div class="flabel">沟通备注</div>
-      <textarea id="f-notes" placeholder="关键沟通内容、跟进事项、具体需求…"></textarea>
+      <div class="flabel" data-zh="沟通备注" data-en="Notes">沟通备注</div>
+      <textarea id="f-notes" placeholder="关键沟通内容、跟进事项、具体需求…" data-zh-ph="关键沟通内容、跟进事项、具体需求…" data-en-ph="Key points, follow-up, needs…"></textarea>
     </div>
     <div class="frow">
-      <div class="flabel">国家市场动态记录</div>
-      <textarea id="f-market" placeholder="该国家/地区市场动态、竞品情况、政策环境…"></textarea>
+      <div class="flabel" data-zh="国家市场动态记录" data-en="Market Intelligence">国家市场动态记录</div>
+      <textarea id="f-market" placeholder="该国家/地区市场动态、竞品情况、政策环境…" data-zh-ph="该国家/地区市场动态、竞品情况、政策环境…" data-en-ph="Market trends, competitors, regulations…"></textarea>
     </div>
   </div>
 
 </div>
-<button class="save-btn" onclick="saveRec()">保　存</button>
+<button class="save-btn" onclick="saveRec()" data-zh="保　存" data-en="SAVE"><span class="c-txt">保　存</span></button>
 
 <!-- ═══ RECORDS ═══ -->
 <div class="view" id="view-records">
@@ -371,17 +372,17 @@ textarea{resize:none;height:80px;line-height:1.5}
       <option>May 19</option><option>May 20</option><option>May 21</option><option>May 22</option>
     </select>
     <select id="fi" onchange="renderRecs()">
-      <option value="">全部意向</option>
+      <option value="" data-zh="全部意向" data-en="All Intent">全部意向</option>
       <option value="High">高</option><option value="Medium">中</option><option value="Low">低</option>
     </select>
     <select id="fp" onchange="renderRecs()">
-      <option value="">全部产品</option>
+      <option value="" data-zh="全部产品" data-en="All Products">全部产品</option>
       <option>FFR</option><option>IVUS</option><option>PFA</option>
       <option>MCs</option><option>Dual-MCs</option><option>Extension</option><option>Others</option>
     </select>
     <select id="fr" onchange="renderRecs()">
-      <option value="">全部大区</option>
-      <option value="一区">一区</option><option value="二区">二区</option>
+      <option value="" data-zh="全部大区" data-en="All Regions">全部大区</option>
+      <option value="一区" data-zh="一区" data-en="Region 1">一区</option><option value="二区" data-zh="二区" data-en="Region 2">二区</option>
     </select>
   </div>
   <div class="rec-count" id="rec-cnt"></div>
@@ -393,8 +394,8 @@ textarea{resize:none;height:80px;line-height:1.5}
   <div class="sg" id="sg"></div>
   <div id="charts"></div>
   <div class="exp-btns">
-    <button class="exp-btn" onclick="exportFull()">↓ &nbsp; 导出完整报告（含名片图片）</button>
-    <button class="exp-btn exp-btn2" onclick="exportCSV()">↓ &nbsp; 仅导出 CSV</button>
+    <button class="exp-btn" onclick="exportFull()" data-zh="↓ 导出完整报告（含名片图片）" data-en="↓ Export Full Report (with photos)"><span class="c-txt">↓ &nbsp; 导出完整报告（含名片图片）</span></button>
+    <button class="exp-btn exp-btn2" onclick="exportCSV()" data-zh="↓ 仅导出 CSV" data-en="↓ Export CSV only"><span class="c-txt">↓ &nbsp; 仅导出 CSV</span></button>
   </div>
 </div>
 
@@ -688,11 +689,11 @@ function renderStats() {
     '<div class="sc"><div class="scn">'+n+'</div><div class="scl">总记录数</div></div>'+
     '<div class="sc"><div class="scn r">'+high+'</div><div class="scl">🔥 高意向</div></div>'+
     '<div class="sc"><div class="scn b">'+low+'</div><div class="scl">❄️ 低意向</div></div>'+
-    '<div class="sc"><div class="scn">'+nNew+'</div><div class="scl">新客户</div></div>';
+    '<div class="sc"><div class="scn">'+nNew+'</div><div class="scl" data-zh="新客户" data-en="New Customer"><span class="c-txt">新客户</span></div></div>';
   var byDate=[['5月19日','May 19'],['5月20日','May 20'],['5月21日','May 21'],['5月22日','May 22']].map(function(d){return[d[0],recs.filter(function(r){return r.date===d[1];}).length];});
   var byProd=['FFR','IVUS','PFA','MCs','Dual-MCs','Extension','Others'].map(function(p){return[p,recs.filter(function(r){return r.prods.indexOf(p)>-1;}).length];}).filter(function(x){return x[1]>0;});
   var byRegion=[['一区',recs.filter(function(r){return r.region.indexOf('一区')>-1;}).length],['二区',recs.filter(function(r){return r.region.indexOf('二区')>-1;}).length]];
-  var byMember=['BELLONA','FABO','ISSAC','JAMES','JASON','JOYCE','LYNETTY','OTHERS'].map(function(m){return[m,recs.filter(function(r){return r.recorder===m;}).length];}).filter(function(x){return x[1]>0;});
+  var byMember=['ALEX W','BELLONA','FARBO','ISSAC','JAMES','JASON','JOYCE','LYNETTY','OTHERS'].map(function(m){return[m,recs.filter(function(r){return r.recorder===m;}).length];}).filter(function(x){return x[1]>0;});
   var byComp=['Philips','Boston Scientific','Abbott','Acist','Nipro','SonoScape','Pulse Medical'].map(function(c){return[c,recs.filter(function(r){return r.comps.indexOf(c)>-1;}).length];}).filter(function(x){return x[1]>0;});
   function bc(title,data){
     if(!data.length)return'';
@@ -761,6 +762,51 @@ function toast(msg) {
 
 updateStrip();
 loadFromCloud();
+
+// ── LANGUAGE TOGGLE ──
+var currentLang = localStorage.getItem('lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  var btn = document.getElementById('lang-btn');
+  btn.textContent = lang === 'zh' ? 'EN' : '中文';
+
+  // Text nodes with data-zh/data-en
+  document.querySelectorAll('[data-zh]').forEach(function(el) {
+    el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+  });
+
+  // Spans inside chips/buttons
+  document.querySelectorAll('[data-zh] .c-txt, [data-zh] .t-txt').forEach(function(el) {
+    var parent = el.closest('[data-zh]');
+    if (parent) el.textContent = lang === 'zh' ? parent.getAttribute('data-zh') : parent.getAttribute('data-en');
+  });
+
+  // Placeholders
+  document.querySelectorAll('[data-zh-ph]').forEach(function(el) {
+    el.placeholder = lang === 'zh' ? el.getAttribute('data-zh-ph') : el.getAttribute('data-en-ph');
+  });
+
+  // Select options
+  document.querySelectorAll('option[data-zh]').forEach(function(el) {
+    el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+  });
+
+  // Sync bar default text
+  var syncTxt = document.getElementById('sync-txt');
+  if (syncTxt && syncTxt.getAttribute('data-zh')) {
+    syncTxt.textContent = lang === 'zh' ? syncTxt.getAttribute('data-zh') : syncTxt.getAttribute('data-en');
+  }
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'zh' ? 'en' : 'zh');
+}
+
+// Apply on load
+applyLang(currentLang);
+
 </script>
 </body>
 </html>
