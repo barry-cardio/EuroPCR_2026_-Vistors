@@ -477,8 +477,10 @@ setInterval(loadFromCloud, 30000);
 
 // ── COUNTRIES ──
 var COUNTRIES = [
+  // Greater China
   'China (Mainland)', 'China - Hong Kong', 'China - Macau', 'China - Taiwan',
-  // Europe
+
+  // Europe (含英国及所有欧洲主权国家)
   'Albania', 'Andorra', 'Austria', 'Belarus', 'Belgium', 'Bosnia & Herzegovina', 
   'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 
   'Finland', 'France', 'Germany', 'Greece', 'Holy See', 'Hungary', 'Iceland', 
@@ -486,29 +488,46 @@ var COUNTRIES = [
   'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro', 'Netherlands', 
   'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'San Marino', 
   'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 
-  'Ukraine', 'United Kingdom',
-  // CIS & Central Asia
-  'Armenia', 'Azerbaijan', 'Georgia', 'Kazakhstan', 'Kyrgyzstan', 'Russia', 
-  'Tajikistan', 'Turkmenistan', 'Uzbekistan',
-  // Middle East & North Africa
-  'Bahrain', 'Egypt', 'Iran', 'Iraq', 'Israel', 'Jordan', 'Kuwait', 'Lebanon', 
-  'Libya', 'Morocco', 'Oman', 'Palestine', 'Qatar', 'Saudi Arabia', 'Syria', 
-  'Tunisia', 'Turkey', 'United Arab Emirates', 'Yemen',
-  // Asia-Pacific (含补全)
+  'Ukraine', 'UK',
+
+  // North America
+  'Canada', 'United States',
+
+  // Asia-Pacific (不含已剔除国家)
   'Afghanistan', 'Australia', 'Bangladesh', 'Bhutan', 'Brunei', 'Cambodia', 
   'Fiji', 'India', 'Indonesia', 'Japan', 'Kiribati', 'Laos', 'Malaysia', 
   'Maldives', 'Marshall Islands', 'Micronesia', 'Mongolia', 'Myanmar', 'Nauru', 
   'Nepal', 'New Zealand', 'Pakistan', 'Palau', 'Papua New Guinea', 'Philippines', 
-  'Samoa', 'Singapore', 'Solomon Islands', 'South Korea', 'Sri Lanka', 
-  'Thailand', 'Timor-Leste', 'Tonga', 'Tuvalu', 'Vanuatu', 'Vietnam',
-  // Africa
-  'Algeria', 'Angola', 'Cameroon', 'DR Congo', 'Ethiopia', 'Ghana', 'Kenya',
-  'Mozambique', 'Nigeria', 'Rwanda', 'Senegal', 'South Africa', 'Sudan', 
-  'Tanzania', 'Uganda', 'Zimbabwe',
-  // Americas
-  'Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
-  'Dominican Republic', 'Ecuador', 'El Salvador', 'Guatemala', 'Honduras',
-  'Mexico', 'Nicaragua', 'Panama', 'Paraguay', 'Peru', 'Uruguay', 'Venezuela'
+  'Samoa', 'Solomon Islands', 'South Korea', 'Sri Lanka', 'Thailand', 
+  'Timor-Leste', 'Tonga', 'Tuvalu', 'Vanuatu', 'Vietnam',
+
+  // Middle East & North Africa
+  'Algeria', 'Bahrain', 'Egypt', 'Iran', 'Iraq', 'Israel', 'Jordan', 'Kuwait', 
+  'Lebanon', 'Libya', 'Morocco', 'Oman', 'Palestine', 'Qatar', 'Saudi Arabia', 
+  'Syria', 'Tunisia', 'Turkey', 'United Arab Emirates', 'Yemen',
+
+  // CIS & Central Asia
+  'Armenia', 'Azerbaijan', 'Georgia', 'Kazakhstan', 'Kyrgyzstan', 'Russia', 
+  'Tajikistan', 'Turkmenistan', 'Uzbekistan',
+
+  // Latin America & Caribbean
+  'Antigua & Barbuda', 'Argentina', 'Bahamas', 'Barbados', 'Belize', 'Bolivia', 
+  'Brazil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba', 'Dominica', 
+  'Dominican Republic', 'Ecuador', 'El Salvador', 'Grenada', 'Guatemala', 
+  'Guyana', 'Haiti', 'Honduras', 'Jamaica', 'Mexico', 'Nicaragua', 'Panama', 
+  'Paraguay', 'Peru', 'St. Kitts & Nevis', 'St. Lucia', 'St. Vincent & Grenadines', 
+  'Suriname', 'Trinidad & Tobago', 'Uruguay', 'Venezuela',
+
+  // Sub-Saharan Africa
+  'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cabo Verde', 
+  'Cameroon', 'Central African Republic', 'Chad', 'Comoros', 'Congo', 
+  'Cote d\'Ivoire', 'DR Congo', 'Djibouti', 'Equatorial Guinea', 'Eritrea', 
+  'Eswatini', 'Ethiopia', 'Gabon', 'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 
+  'Kenya', 'Lesotho', 'Liberia', 'Madagascar', 'Malawi', 'Mali', 'Mauritania', 
+  'Mauritius', 'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda', 
+  'Sao Tome & Principe', 'Senegal', 'Seychelles', 'Sierra Leone', 'Somalia', 
+  'South Africa', 'South Sudan', 'Sudan', 'Tanzania', 'Togo', 'Uganda', 
+  'Zambia', 'Zimbabwe'
 ].sort(function(a,b){ var ac=a.startsWith('China'),bc=b.startsWith('China'); if(ac&&!bc)return -1; if(!ac&&bc)return 1; return a.localeCompare(b); });
 
 var filteredC = COUNTRIES.slice();
